@@ -17,4 +17,32 @@
         <p class="article-content">{{ object.content }}</p>
         </div>
     </article>
+    <h2>Comments</h2>
+    {% if not post.comments.all %}
+        <h3>No comments yet</h3>
+        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Add one..</a>
+    {% else %}
+        <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Add comment</a>
+        <br>
+        <hr>
+        {% for comment in post.comments.all %}
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}" >
+            <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ comment.author }}</a>
+                <small class="text-muted">{{ comment.date_posted }}</small>
+                {% if comment.author == user %}
+                    <div>
+                        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'post-update' object.id %}">Update</a>
+                        <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+            <p class="article-content">{{ comment.content }}</p> 
+            </div> 
+        </article>
+        {% endfor %}
+    {% endif %}
+
 {% endblock content %}
