@@ -34,8 +34,7 @@
                 <small class="text-muted">{{ comment.date_posted }}</small>
                 {% if comment.author == user %}
                     <div>
-                        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'post-update' object.id %}">Update</a>
-                        <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-update' comment.id %}">Update</a>
                     </div>
                 {% endif %}
             </div>

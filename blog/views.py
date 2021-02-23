@@ -70,3 +70,18 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    fields = ['content']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
