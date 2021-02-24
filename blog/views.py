@@ -85,3 +85,14 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == comment.author:
             return True
         return False
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    success_url = '/'
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
