@@ -1,14 +1,21 @@
 {% extends "blog/base.html" %}
 {% block content %}
-  <div class="content-section">
-    <div class="media">
-        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+  <div class="content-section" style="text-align: center;">
+    <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+    <div class="media" style="text-align: center;">
         <div class="media-body">
             <h2 class="account-heading">{{ user.username }}</h2>
             <p class="text-secondary">{{ user.email }}</p> 
         </div>
     </div>
+    <div class="media" style="text-align: center;">
+      <div class="media-body">
+        <h2 class="account-heading">About Me</h2>
+        <p class="text-secondary" style="text-align: left;">{{ user.profile.bio }}</p> 
+      </div>
+    </div>
   </div>
+  <h2>Posts</h2>
   {% for post in posts %}
     {% ifequal user post.author %}
       <article class="media content-section">
