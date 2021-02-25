@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+from blog.models import Post
 
 
 def register(request):
@@ -39,3 +42,9 @@ def profile(request):
         'p_form': p_form
     }
     return render(request, 'users/profile.html', context)
+
+
+def profile_page(request, pk):
+    context = {"user": User.objects.get(
+        id=pk), 'posts': Post.objects.all()}
+    return render(request, "users/profile_page.html", context)
