@@ -1,21 +1,24 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <article class="media content-section">
-        <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" >
+    <article class="content-section">
         <div class="media-body">
         <div class="article-metadata">
+            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" >
             <a class="mr-2" href="#">{{ object.author }}</a>
             <small class="text-muted">{{ object.date_posted }}</small>
-            {% if object.author == user %}
-                <div>
-                    <a class="btn btn-secondary bt-sm mt-1" href="{% url 'post-update' object.id %}">Update</a>
-                    <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
-                </div>
-            {% endif %}
         </div>
+        {% if object.image %}
+            <img class="article-image" src="{{ object.image.url }}" alt="no image">
+        {% endif %}
         <h2 class="article-title">{{ object.title }}</h2>
         <p class="article-content">{{ object.content }}</p>
         </div>
+        {% if object.author == user %}
+            <div>
+                <a class="btn btn-secondary bt-sm mt-1" href="{% url 'post-update' object.id %}">Update</a>
+                <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            </div>
+        {% endif %}
     </article>
     <h2>Comments</h2>
     {% if not post.comments.all %}
@@ -26,21 +29,21 @@
         <br>
         <hr>
         {% for comment in post.comments.all %}
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}" >
+        <article class="content-section">
             <div class="media-body">
             <div class="article-metadata">
+                <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}" >
                 <a class="mr-2" href="#">{{ comment.author }}</a>
                 <small class="text-muted">{{ comment.date_posted }}</small>
-                {% if comment.author == user %}
-                    <div>
-                        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-update' comment.post.id comment.id %}">Update</a>
-                        <a class="btn btn-danger bt-sm mt-1" href="{% url 'comment-delete' comment.post.id comment.id %}">Delete</a>
-                    </div>
-                {% endif %}
             </div>
             <p class="article-content">{{ comment.content }}</p> 
             </div> 
+            {% if comment.author == user %}
+                <div>
+                    <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-update' comment.post.id comment.id %}">Update</a>
+                    <a class="btn btn-danger bt-sm mt-1" href="{% url 'comment-delete' comment.post.id comment.id %}">Delete</a>
+                </div>
+            {% endif %}
         </article>
         {% endfor %}
     {% endif %}

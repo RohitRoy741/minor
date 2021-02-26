@@ -10,6 +10,7 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
         User, related_name='posts', on_delete=models.CASCADE)
+    image = models.ImageField(null=True, blank=True, upload_to='blog_images/')
 
     def __str__(self):
         return self.title
