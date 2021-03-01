@@ -25,7 +25,7 @@ SECRET_KEY = '9p3r3xvp@=1jx8(k_aa0bj$_=!boqq2lyufea!6ie5!ejb@sfu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['muj-blog.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['Salamander20.pythonanywhere.com','muj-blog.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'quesans',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

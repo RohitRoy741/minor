@@ -29,6 +29,7 @@ urlpatterns = [
     path('profile/<int:pk>',
          user_views.profile_page, name="profile-page"),
     path('', include('blog.urls')),
+    path('quesans/',include('quesans.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
