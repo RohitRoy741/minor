@@ -1,0 +1,17 @@
+{% extends 'quesans/base_layout.html' %}
+{% block content %}
+    {% for question in questions %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+        <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{question.author}}</a>
+            <small class="text-muted">{{question.created_on}}</small>
+        </div>
+        <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
+        <p class="article-content">{{ question.snippet }}</p>
+        </div>
+    </article>
+    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn btn-info' role='button'>Edit</a>
+    {% endfor %}
+{% endblock %}

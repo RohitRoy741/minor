@@ -1,0 +1,32 @@
+{% extends 'quesans/base_layout.html' %}
+{% block content %}
+<article class="media content-section" style="margin-top:50px">
+    <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+    <div class="media-body">
+    <div class="article-metadata">
+        <a class="mr-2" href="#">{{question.author}}</a>
+        <small class="text-muted">{{question.created_on}}</small>
+    </div>
+    <h2>{{ question.title }}</h2>
+    <p class="article-content">{{ question.desc }}</p>
+    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn btn-info' role='button'>Edit</a>
+    </div>
+</article>
+{% for answer in answers %}
+<article class="media content-section" style="margin-top:20px, margin-bottom:50px">
+  <div class="media-body">
+    <div class="article-metadata">
+      {% if answer.is_anonymous %}
+      <small class="text-muted">Anonymous</small>
+      {% else %}
+      <a class="mr-3" href="#">{{answer.user.username}}</a>
+      {% endif %}
+      <small class="text-muted">{{answer.date}}</small>
+    </div>
+    <p class="article-content">{{answer.answer_text}}</p>
+    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
+  </div>
+</article>
+{% endfor %}
+<a href="{% url 'quesans:postans' question.pk %}" class='btn btn-info' role='button'>Add an answer</a>
+{% endblock %}
