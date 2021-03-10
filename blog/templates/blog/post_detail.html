@@ -19,6 +19,10 @@
                 <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
             </div>
         {% endif %}
+        <form action="{% url 'like_post' object.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit", name="post_id", value="{{ object.id }}", class="btn btn-primary btn-sm">Like</button>
+        </form>
     </article>
     <h2>Comments</h2>
     {% if not post.comments.all %}

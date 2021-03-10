@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from blog.models import Post
+from .models import Profile
+from django.contrib.auth import authenticate
+from django.contrib.auth.views import LoginView
+from . import face_id as fi
 
 
 def register(request):
@@ -20,6 +24,23 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+class CustomLogin(LoginView):
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            profile = Profile.objects.get(user=user)
+            if profile.two_factor:
+                if fi.faceLogin(profile.face_encode.url, profile.user.username):
+                    return self.form_valid(form)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -27,8 +48,11 @@ def profile(request):
         p_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
+            instance = p_form.save(commit=False)
+            if instance.two_factor == True:
+                fi.faceCapture(instance)
+                instance.save()
+            instance.save()
             messages.success(
                 request, f'Your account has been updated!')
             return redirect('profile')
