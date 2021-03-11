@@ -1,6 +1,6 @@
 body {
-  background: #f7f3f3;
-  color: #333333;
+  background: rgb(44, 43, 43);
+  color: #fff;
   margin-top: 5rem;
 }
 
@@ -10,7 +10,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #f1eeee;
+  color: aliceblue;
 }
 
 ul {
@@ -34,8 +34,7 @@ ul {
 }
 
 .content-section {
-  border: #000 solid 1px;
-  border-top: #fff solid 1px;
+  border: rgb(168, 158, 158) solid 1px;
   background: #000000;
   padding: 0.5rem 1rem;
   margin-bottom: 20px;
@@ -97,4 +96,5 @@ a.article-title:hover {
   display: block;
   width: 100%;
   height: 70vh;
+  border-radius: 5%;
 }
