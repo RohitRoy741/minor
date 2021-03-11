@@ -19,17 +19,12 @@
                 <a class="btn btn-danger bt-sm mt-1" href="{% url 'post-delete' object.id %}">Delete</a>
             </div>
         {% endif %}
-        <form action="{% url 'like_post' object.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit", name="post_id", value="{{ object.id }}", class="btn btn-primary btn-sm">Like</button>
-        </form>
     </article>
-    <h2>Comments</h2>
+    <a class="btn btn-primary bt-sm mt-1" id = "{{ object.id }}" href="{% url 'like-create' object.pk %}">Like</a>
     {% if not post.comments.all %}
-        <h3>No comments yet</h3>
-        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Add one..</a>
+        <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
     {% else %}
-        <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Add comment</a>
+        <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
         <br>
         <hr>
         {% for comment in post.comments.all %}

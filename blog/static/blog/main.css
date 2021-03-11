@@ -10,7 +10,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #444444;
+  color: #f1eeee;
 }
 
 ul {
@@ -18,7 +18,7 @@ ul {
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: #080808;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -34,15 +34,15 @@ ul {
 }
 
 .content-section {
-  background: #ffffff;
+  border: #000 solid 1px;
+  border-top: #fff solid 1px;
+  background: #000000;
   padding: 0.5rem 1rem;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
   margin-bottom: 20px;
 }
 
 .article-title {
-  color: #444444;
+  color: #eee1e1;
 }
 
 a.article-title:hover {
@@ -63,7 +63,7 @@ a.article-title:hover {
 .article-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3;
+  border-bottom: #000 solid 1px;
   display: flex;
   flex-direction: row;
   align-items: center;

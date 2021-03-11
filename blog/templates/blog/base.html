@@ -18,6 +18,28 @@
         <title>Django Blog</title>
     {% endif %}
     <style>
+      body {
+        background: #000;
+        color: #fff;
+      }
+      .content-section {
+        border: #000 solid 1px;
+        border-top: rgb(168, 158, 158) solid 1px;
+        background: #000000;
+        padding: 0.5rem 1rem;
+        margin-bottom: 20px;
+      }
+      .article-metadata {
+        padding-bottom: 1px;
+        margin-bottom: 4px;
+        border-bottom: #000 solid 1px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .article-title {
+        color: #c2baba;
+      }
       .article-img {
         height: 5rem;
         width: 5rem;
@@ -42,6 +64,24 @@
         display: block;
         width: 100%;
         height: 60vh;
+      }
+      .bg-steel {
+        background-color: #080808;
+      }
+      h3 {
+        color: aliceblue;
+      }
+      .list-group-item-dark {
+          color: #eff2f5;
+          background-color: #000000;
+      }
+      .list-group-item {
+          position: relative;
+          display: block;
+          padding: .75rem 1.25rem;
+          margin-bottom: -1px;
+          background-color: rgb(7, 7, 7);
+          border: 1px solid rgb(249 245 245 / 13%);
       }
     </style>
 </head>
@@ -89,12 +129,12 @@
           <div class="col-md-4">
             <div class="content-section">
               <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
+              <p class='text-muted'>You can put any information here you'd like.>
                 <ul class="list-group">
-                  <li class="list-group-item list-group-item-light">Latest Posts</li>
-                  <li class="list-group-item list-group-item-light">Announcements</li>
-                  <li class="list-group-item list-group-item-light">Calendars</li>
-                  <li class="list-group-item list-group-item-light">etc</li>
+                  <li class="list-group-item list-group-item-dark">Latest Posts</li>
+                  <li class="list-group-item list-group-item-dark">Announcements</li>
+                  <li class="list-group-item list-group-item-dark">Calendars</li>
+                  <li class="list-group-item list-group-item-dark">etc</li>
                 </ul>
               </p>
             </div>
