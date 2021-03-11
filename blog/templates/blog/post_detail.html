@@ -20,7 +20,6 @@
             </div>
         {% endif %}
     </article>
-    <a class="btn btn-primary bt-sm mt-1" id = "{{ object.id }}" href="{% url 'like-create' object.pk %}">Like</a>
     {% if not post.comments.all %}
         <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
     {% else %}

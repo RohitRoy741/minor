@@ -28,27 +28,3 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.post.pk})
-
-
-class Like(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='liking_user', null=True)
-    post = models.ForeignKey(Post, related_name='likes',
-                             on_delete=models.CASCADE)
-    likes = models.IntegerField(default=0)
-
-    @classmethod
-    def like(cls, post, liking_user):
-        obj, create = cls.objects.get_or_create(post=post)
-        obj.user.add(liking_user)
-
-    @classmethod
-    def dislike(cls, post, disliking_user):
-        obj, create = cls.objects.get_or_create(post=post)
-        obj.user.remove(disliking_user)
-
-    def __str__(self):
-        return str(self.post)
-
-    def get_absolute_url(self):
-        return reverse('post-detail', kwargs={'pk': self.post.pk})

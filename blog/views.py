@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment, Like
+from .models import Post, Comment
 
 
 context = {'posts': Post.objects.all()}
@@ -96,13 +96,3 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == comment.author:
             return True
         return False
-
-
-class LikeCreateView(LoginRequiredMixin, CreateView):
-    model = Like
-    fields = []
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.post_id = self.kwargs['pk']
-        return super().form_valid(form)

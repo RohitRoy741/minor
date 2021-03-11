@@ -14,9 +14,8 @@
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
             <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' post.pk %}">Comment</a>
-            <a class="btn btn-primary bt-sm mt-1" id = "{{ post.id }}" href="{% url 'like-create' post.pk %}">Like</a>
             </div>
-            <p>{{ post.likes.count }} likes and {{ post.comments.count }} comments</p>
+            <p>{{ post.comments.count }} comments</p>
         </article>
     {% endfor %}
 {% endblock content %}
