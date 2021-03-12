@@ -9,6 +9,9 @@ from .models import Profile
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from . import face_id as fi
+from django.shortcuts import render, redirect, get_object_or_404, reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView
 
 
 def register(request):
@@ -72,3 +75,9 @@ def profile_page(request, pk):
     context = {"user": User.objects.get(
         id=pk), 'posts': Post.objects.all()}
     return render(request, "users/profile_page.html", context)
+
+
+def follow(request, pk):
+    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
+    profile.following.add(request.user)
+    return HttpResponseRedirect(reverse('blog-home'))

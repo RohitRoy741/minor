@@ -136,3 +136,8 @@ LOGIN_REDIRECT_URL = 'blog-home'
 LOGIN_URL = 'login'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+PINAX_LIKES_LIKABLE_MODELS = {
+    "blog.Post": {},
+}

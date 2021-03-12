@@ -6,13 +6,16 @@
         <div class="media-body">
             <h2 class="account-heading">{{ user.username }}</h2>
             <p class="text-secondary">{{ user.email }}</p> 
+            
         </div>
     </div>
-    <div class="media" style="text-align: center;">
-      <div class="media-body">
-        <h2 class="account-heading">About Me</h2>
-        <p class="text-secondary" style="text-align: left;">{{ user.profile.bio }}</p> 
-      </div>
+    <div style="display: flex; flex-direction: row; justify-content: space-around;">
+      <p class="btn btn-secondary bt-sm mt-1">{{ user.profile.following.count }} followers</p>
+      <p class="btn btn-secondary bt-sm mt-1">{{ user.following.count }} following</p>
+      <form action="{% url 'follow' user.profile.pk %}" method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ user.profile.id }}">Follow</button>
+      </form>
     </div>
   </div>
   <h2>Posts</h2>

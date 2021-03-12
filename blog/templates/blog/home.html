@@ -13,9 +13,16 @@
             {% endif %}
             <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
+            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ post.id }}">Like</button>
+            </form>
             <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' post.pk %}">Comment</a>
             </div>
-            <p>{{ post.comments.count }} comments</p>
+            <div class="tags">
+                <p>{{ post.likes.count }} likes</p>
+                <p>{{ post.comments.count }} comments</p>
+            </div>
         </article>
     {% endfor %}
 {% endblock content %}
