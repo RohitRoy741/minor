@@ -26,10 +26,17 @@
     </form>
     {% if not post.comments.all %}
         <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
+        <div class="tags">
+            <p>{{ post.likes.count }} likes</p>
+            <p>{{ post.comments.count }} comments</p>
+        </div>
     {% else %}
         <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
-        <br>
-        <hr>
+        <div class="tags">
+            <p>{{ post.likes.count }} likes</p>
+            <p>{{ post.comments.count }} comments</p>
+        </div>
+        <hr style="color: aliceblue;">
         {% for comment in post.comments.all %}
         <article class="content-section">
             <div class="media-body">

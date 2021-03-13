@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  {% for profile in profiles %}
+    <div class="content-section" style="text-align: center;">
+        <img class="rounded-circle account-img" src="{{ profile.image.url }}">
+        <div class="media" style="text-align: center;">
+            <div class="media-body">
+                <h2 class="account-heading">{{ profile.user.username }}</h2>
+                <p class="text-secondary">{{ profile.user.email }}</p>  
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row; justify-content: space-around;">
+        <p class="btn btn-secondary bt-sm mt-1">{{ profile.following.count }} followers</p>
+        <p class="btn btn-secondary bt-sm mt-1">{{ profile.user.following.count }} following</p>
+        <form action="{% url 'follow' profile.pk %}" method="POST" style="display: inline-block;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ profile.id }}">Follow</button>
+        </form>
+        </div>
+    </div>
+  {% endfor %}
+{% endblock content %}

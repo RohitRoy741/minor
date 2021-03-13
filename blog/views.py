@@ -4,16 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
 from users.models import Profile
-
-
-context = {'posts': Post.objects.all()}
+from django.contrib.auth.models import User
 
 
 def home(request):
-    return render(request, 'blog/home.html', context)
+    return render(request, 'blog/home.html')
 
 
-class PostListView(ListView):
+class PostListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'

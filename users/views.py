@@ -12,6 +12,7 @@ from . import face_id as fi
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 def register(request):
@@ -81,3 +82,9 @@ def follow(request, pk):
     profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
     profile.following.add(request.user)
     return HttpResponseRedirect(reverse('blog-home'))
+
+
+class ProfileListView(LoginRequiredMixin, ListView):
+    model = Profile
+    context_object_name = 'profiles'
+    template_name = 'users/suggestions.html'

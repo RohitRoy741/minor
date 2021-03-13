@@ -30,7 +30,9 @@ urlpatterns = [
          user_views.profile_page, name="profile-page"),
     path('', include('blog.urls')),
     path('quesans/', include('quesans.urls')),
-    path('follow/<int:pk>', user_views.follow, name='follow')
+    path('follow/<int:pk>', user_views.follow, name='follow'),
+    path('suggestions/', user_views.ProfileListView.as_view(
+        template_name='users/suggestions.html'), name='suggestions'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
