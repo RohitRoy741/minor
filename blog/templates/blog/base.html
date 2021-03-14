@@ -17,6 +17,9 @@
         <title>Django Blog</title>
     {% endif %}
     <style>
+      html{
+        filter: brightness(105%) contrast(110%);
+      }
       body {
         background:#121212;
         color: #fff;
@@ -91,6 +94,43 @@
       .tags p{
         margin-right: 5%;
       }
+      .team-members{
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        flex-wrap: wrap;
+        flex-direction: row;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+      }
+      .member{    
+        margin: 2rem;
+        border-radius: 8px;
+        padding-bottom: 1rem;
+        background-color: rgb(20, 22, 33);
+      }
+      .member-details{
+        margin-top: 0.5rem;
+        margin-left: 1rem;
+      }
+      .suggestions{
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        flex-wrap:wrap;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+      }
+      .suggestion{
+        margin: 2rem;
+        border-radius: 8px;
+        padding-bottom: 1rem;
+        background-color: rgb(20, 22, 33);
+      }
     </style>
 </head>
 <body>
@@ -124,7 +164,10 @@
     </header>
     <main role="main" class="container">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-3">
+
+          </div>
+          <div class="col-md-5">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
@@ -134,17 +177,19 @@
             {% endif %}
             {% block content %}{% endblock %}
           </div>
-          <div class="col-md-4">
-            <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.>
-                <ul class="list-group">
-                  <li class="list-group-item list-group-item-dark">Latest Posts</li>
-                  <li class="list-group-item list-group-item-dark">Announcements</li>
-                  <li class="list-group-item list-group-item-dark">Calendars</li>
-                  <li class="list-group-item list-group-item-dark">etc</li>
-                </ul>
-              </p>
+          <div class="col-md-4" width="100%">
+            <h3 style="margin-left:2rem">Developed By</h3>
+            <div class="team-members">
+              <div class="member">
+                <img src="../../../media/profile_pics/RohitProfilePic.jpg"  width="300px" height="300px" style="border-radius: 8px 8px 0px 0px;">
+                <p class="member-details" style="font-size: x-large; font-weight: 500;">Rohit</p>
+                <p class="member-details">Backend Developer</p>
+              </div>
+              <div class="member">
+                <img src="../../../media/profile_pics/avatar.jpg" width="300px" height="300px" style="border-radius: 8px 8px 0px 0px;">
+                <p class="member-details" style="font-size: x-large; font-weight: 500;">Manveer</p>
+                <p class="member-details">Machine Learning Enginner</p>
+              </div>
             </div>
           </div>
         </div>

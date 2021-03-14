@@ -81,7 +81,7 @@ def profile_page(request, pk):
 def follow(request, pk):
     profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
     profile.following.add(request.user)
-    return HttpResponseRedirect(reverse('blog-home'))
+    return HttpResponseRedirect(reverse('suggestions'))
 
 
 class ProfileListView(LoginRequiredMixin, ListView):
