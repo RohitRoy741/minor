@@ -13,6 +13,8 @@ class Profile(models.Model):
     two_factor = models.BooleanField(default=False)
     following = models.ManyToManyField(
         User, related_name='following')
+    follow_request = models.ManyToManyField(
+        User, related_name='requests')
 
     def __str__(self):
         return f'{self.user.username} Profile'

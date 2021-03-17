@@ -87,6 +87,24 @@ def follow(request, pk):
     return HttpResponseRedirect(reverse('suggestions'))
 
 
+def follow_request(request, pk):
+    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
+    if profile.follow_request.filter(id=request.user.id).exists():
+        profile.follow_request.remove(request.user)
+    else:
+        profile.follow_request.add(request.user)
+    return HttpResponseRedirect(reverse('suggestions'))
+
+
+def accept_follow_request(request, pk):
+    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
+    user = get_object_or_404(User, id=pk)
+    profile.following.add(user)
+    profile.follow_request.remove(user)
+
+    return HttpResponseRedirect(reverse('suggestions'))
+
+
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
     context_object_name = 'profiles'
@@ -94,10 +112,14 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileListView, self).get_context_data(**kwargs)
+        request_lst = []
         lst = []
         for profile in self.request.user.following.all():
             lst.append(profile.id)
+        for profile in self.request.user.requests.all():
+            request_lst.append(profile.id)
         context['lst'] = lst
+        context['request_lst'] = request_lst
         return context
 
 

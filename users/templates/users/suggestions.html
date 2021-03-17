@@ -2,7 +2,7 @@
 {% block content %}
   <div class="suggestions">
     {% for profile in profiles %}
-      <div class="suggestion" style="width: 100%;">
+        <div class="suggestion" style="width: 100%;">
           <img width="100%" height="300vh" style="border-radius: 8px 8px 0px 0px;" src="{{ profile.image.url }}">
           <div class="media" style="text-align: center;">
               <div class="media-body">
@@ -19,13 +19,20 @@
                 <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Following</button>
               </form>
             {% else %}
-              <form action="{% url 'follow' profile.pk %}" method="POST" class="mt-1">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ profile.id }}">Follow</button>
-              </form>
+              {% if profile.id in request_lst %}
+                <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Requested</button>
+                </form>
+              {% else %}
+                <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ profile.id }}">Follow</button>
+                </form>
+              {% endif %}
             {% endif %}
           </div>
-      </div>
+        </div>
     {% endfor %}
   </div>
 {% endblock content %}
