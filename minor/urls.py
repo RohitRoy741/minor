@@ -28,7 +28,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
     path('profile/', user_views.profile, name="profile"),
     path('profile/<int:pk>',
-         user_views.profile_page, name="profile-page"),
+         user_views.ProfileDetailView.as_view(template_name='users/profile_page.html'), name="profile-page"),
     path('', include('blog.urls')),
     path('quesans/', include('quesans.urls')),
     path('follow/<int:pk>', user_views.follow, name='follow'),

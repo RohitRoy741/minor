@@ -7,7 +7,7 @@
                     <div class="media-body">
                         <div class="article-metadata">
                             <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" >
-                            <a class="mr-2" style="color: aliceblue;" href="{% url 'profile-page' post.author.id %}">{{ post.author }}</a>
+                            <a class="mr-2" style="color: aliceblue;" href="{% url 'profile-page' post.author.profile.id %}">{{ post.author }}</a>
                             <small class="text-muted">{{ post.date_posted }}</small>
                         </div>
                         {% if post.image %}

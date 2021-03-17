@@ -119,7 +119,7 @@ def LikeView(request, pk):
     liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        liked = True
+        liked = False
     else:
         post.likes.add(request.user)
         liked = True
