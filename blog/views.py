@@ -17,9 +17,26 @@ class PostListView(LoginRequiredMixin, ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        return context
+
 
 class PostDetailView(DetailView):
     model = Post
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        post = get_object_or_404(Post, id=self.kwargs['pk'])
+        liked = False
+        if post.likes.filter(id=self.request.user.id).exists():
+            liked = True
+        context["liked"] = liked
+        return context
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -99,5 +116,11 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    post.likes.add(request.user)
+    liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked = True
+    else:
+        post.likes.add(request.user)
+        liked = True
     return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))

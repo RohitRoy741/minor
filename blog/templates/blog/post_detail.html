@@ -20,10 +20,17 @@
             </div>
         {% endif %}
     </article>
-    <form action="{% url 'like_post' object.pk %}" method="POST" style="display: inline-block;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ object.id }}">Like</button>
-    </form>
+    {% if liked %}
+        <form action="{% url 'like_post' object.pk %}" method="POST" style="display: inline-block;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success bt-sm mt-1" name="post_id" value="{{ object.id }}">Liked</button>
+        </form>
+    {% else %}
+        <form action="{% url 'like_post' object.pk %}" method="POST" style="display: inline-block;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ object.id }}">Like</button>
+        </form>
+    {% endif %}
     {% if not post.comments.all %}
         <a class="btn btn-secondary bt-sm mt-1" href="{% url 'comment-create' object.pk %}">Comment</a>
         <div class="tags">

@@ -15,10 +15,18 @@
                         {% endif %}
                         <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
                         <p class="article-content">{{ post.content }}</p>
-                        <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ post.id }}">Like</button>
-                        </form>
+                        {% if post.id in lst %}
+                            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success bt-sm mt-1" name="post_id" value="{{ post.id }}">Liked</button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ post.id }}">Like</button>
+                            </form>
+                        {% endif %}   
+                        
                         <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' post.pk %}">Comment</a>
                     </div>
                     <div class="tags">
