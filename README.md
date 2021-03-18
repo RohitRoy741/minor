@@ -51,6 +51,7 @@ default database of django.
   ```
   </li>
   <li> Run the local server 
+  
   ``` bash
   python manage.py runserver
   ```
