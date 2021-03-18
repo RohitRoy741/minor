@@ -25,10 +25,10 @@ default database of django.
   <li>Direct messaging between the users.</li>
   <li>A search bar to search users,questions and posts.</li>
   <li>Tagging Friends in posts, questions, etc.</li>
-  <li>Adding nice icons for liking, commenting etc.<li>
+  <li>Adding nice icons for liking, commenting etc.</li>
   <li>Using ajax to prevent page refresh every time a user likes a post or follow someone</li>
   <li>A better UI aimed at simplifying the application</li>
-  <li>Making the face recognition more robust<li>
+  <li>Making the face recognition more robust</li>
 </ul>
 
 ## Installation
