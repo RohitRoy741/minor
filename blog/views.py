@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
 from users.models import Profile
@@ -123,4 +123,9 @@ def LikeView(request, pk):
     else:
         post.likes.add(request.user)
         liked = True
+    data = {
+        'value': liked,
+        'count': post.likes.count()
+    }
+    return JsonResponse(data, safe=False)
     return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))

@@ -15,22 +15,26 @@
                         {% endif %}
                         <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
                         <p class="article-content">{{ post.content }}</p>
-                        {% if post.id in lst %}
-                            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success bt-sm mt-1" name="post_id" value="{{ post.id }}">Liked</button>
-                            </form>
-                        {% else %}
-                            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary bt-sm mt-1" name="post_id" value="{{ post.id }}">Like</button>
-                            </form>
-                        {% endif %}   
                         
-                        <a class="btn btn-info bt-sm mt-1" href="{% url 'comment-create' post.pk %}">Comment</a>
+                            <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;" class="like-form" id="{{ post.id }}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary mt-1 like_button like-btn{{ post.id }}" name="post_id" value="{{ post.id }}">
+                                    {% if post.id in lst %}
+                                        Liked
+                                        <!-- <i class='fas fa-heart' style='font-size:30px;color:red'></i> -->
+                                    {% else %}
+                                        Like
+                                        <!-- <i class='far fa-heart' style='font-size:30px;color:red'></i> -->
+                                    {% endif %}
+                                </button>
+                            </form>                      
+                        <a class="btn btn-secondary mt-1 comment_button" href="{% url 'comment-create' post.pk %}">
+                            Comment
+                            <!-- <i class='fas fa-comment' style='font-size:30px;color:rgb(0, 204, 255)'></i> -->
+                        </a>
                     </div>
                     <div class="tags">
-                        <p>{{ post.likes.count }} likes</p>
+                        <p class="like-count{{ post.id }}">{{ post.likes.count }} likes</p>
                         <p>{{ post.comments.count }} comments</p>
                     </div>
                 </article>
@@ -39,3 +43,41 @@
     {% endfor %}
     <a href="{% url 'suggestions' %}" class="btn btn-info">Follow More</a>
 {% endblock content %}
+
+{% block scripts %} 
+    <script>
+        $(document).ready(function(){
+            $('.like-form').submit(function(e){
+                e.preventDefault()
+                const post_id = $(this).attr('id')
+                const url = $(this).attr('action')
+                let res;
+                const likes = $(`.like-count${post_id}`).text()
+                const trimCount = parseInt(likes)
+                const likeText = $(`.like-btn${post_id}`).text()
+                trim = $.trim(likeText)
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'post_id': post_id,
+                    },
+                    success: function(response) {
+                        if(trim == 'Liked') {
+                            $(`.like-btn${post_id}`).text('Like')
+                            res = trimCount - 1
+                        } else {
+                            $(`.like-btn${post_id}`).text('Liked')
+                            res = trimCount + 1
+                        }
+                        $(`.like-count${post_id}`).text(res+' likes')
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    }
+                })
+            })
+        });
+    </script>
+{% endblock scripts %}
