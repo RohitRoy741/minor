@@ -22,29 +22,26 @@
     </article>
     <form action="{% url 'like_post' post.pk %}" method="POST" style="display: inline-block;" class="like-form" id="{{ post.id }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary mt-1 like_button like-btn{{ post.id }}" name="post_id" value="{{ post.id }}">
+        <button type="submit" class="like_button like-btn{{ post.id }}" name="post_id" value="{{ post.id }}">
             {% if liked %}
-                Liked
-                <!-- <i class='fas fa-heart' style='font-size:30px;color:red'></i> -->
+                <i class='fas fa-heart' style='font-size:30px;color:red'></i> 
             {% else %}
                 Like
-                <!-- <i class='far fa-heart' style='font-size:30px;color:red'></i> -->
+                <i class='far fa-heart' style='font-size:30px;color:red'></i>
             {% endif %}
         </button>
     </form>     
     {% if not post.comments.all %}
-    <a class="btn btn-secondary mt-1 comment_button" href="{% url 'comment-create' post.pk %}">
-        Comment
-        <!-- <i class='fas fa-comment' style='font-size:30px;color:rgb(0, 204, 255)'></i> -->
+    <a class="comment_button" href="{% url 'comment-create' post.pk %}">
+        <i class='fas fa-comment' style='font-size:30px;color:rgb(0, 204, 255)'></i>
     </a>
         <div class="tags">
             <p class="like-count{{ post.id }}">{{ post.likes.count }} likes</p>
             <p>{{ post.comments.count }} comments</p>
         </div>
     {% else %}
-    <a class="btn btn-secondary mt-1 comment_button" href="{% url 'comment-create' post.pk %}">
-        Comment
-        <!-- <i class='fas fa-comment' style='font-size:30px;color:rgb(0, 204, 255)'></i> -->
+    <a class="comment_button" href="{% url 'comment-create' post.pk %}">
+        <i class='fas fa-comment' style='font-size:30px;color:rgb(0, 204, 255)'></i>
     </a>
         <div class="tags">
             <p class="like-count{{ post.id }}" >{{ post.likes.count }} likes</p>
@@ -83,7 +80,7 @@
                 let res;
                 const likes = $(`.like-count${post_id}`).text()
                 const trimCount = parseInt(likes)
-                const likeText = $(`.like-btn${post_id}`).text()
+                const likeText = $(`.like-btn${post_id}`).find("i").hasClass("fas") ? "Liked":"Like"
                 trim = $.trim(likeText)
                 $.ajax({
                     type: 'POST',
@@ -94,10 +91,10 @@
                     },
                     success: function(response) {
                         if(trim == 'Liked') {
-                            $(`.like-btn${post_id}`).text('Like')
+                            $(`.like-btn${post_id}`).html('<i class="far fa-heart" style="font-size:30px;color:red"></i>')
                             res = trimCount - 1
                         } else {
-                            $(`.like-btn${post_id}`).text('Liked')
+                            $(`.like-btn${post_id}`).html('<i class="fas fa-heart" style="font-size:30px;color:red"></i>')
                             res = trimCount + 1
                         }
                         $(`.like-count${post_id}`).text(res+' likes')
