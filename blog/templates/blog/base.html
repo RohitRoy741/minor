@@ -105,7 +105,7 @@
         -webkit-box-pack: center;
         justify-content: center;
       }
-      .member{    
+      .member{
         margin: 2rem;
         border-radius: 8px;
         padding-bottom: 1rem;
@@ -176,7 +176,7 @@
           <div class="col-md-3">
             <p>Follow Requests</p>
             {% for request in user.profile.follow_request.all %}
-              <div class="request-container">
+              <div class="request-container mb-1">
                 <div class="request-meta-container">
                   <img src="{{ request.profile.image.url }}" class="article-img rounded-circle">
                   <div class="styler">
