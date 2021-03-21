@@ -88,6 +88,10 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 
+def notification(request, pk):
+    return render(request, 'blog/notification.html')
+
+
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
     fields = ['content']
@@ -132,4 +136,4 @@ def LikeView(request, pk):
 
 
 def DevelopmentView(request):
-    return render(request,'blog/DevelopmentTeam.html')
+    return render(request, 'blog/DevelopmentTeam.html')
