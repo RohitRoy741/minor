@@ -226,9 +226,6 @@
 			    display: flex;
 			  }
 			}
-      @media only screen and (min-width: 650px) and (max-width: 1200px) {
-
-      }
 			.navigation-icons {
 			  display: flex;
 			}
@@ -273,13 +270,22 @@
 			  font-weight: 500;
 			  display: none;
 			}
-
-      
+      .bottom-navbar{
+        width: 100%;
+        position: fixed;
+        bottom: 0%;
+        height: 40px;
+      }
+      @media only screen and (min-width: 650px) and (max-width: 1800px) {
+        .bottom-navbar {
+          display: none;
+        }
+      }
     </style>
 </head>
 <body>
     <header class="site-header">
-      <div class="navigation">
+      <div class="navigation navbar navbar-dark bg-dark">
         <div class="logo">
           <a class="no-underline" href="/">
             Network
@@ -310,8 +316,8 @@
               </div>
             </i>
           </a>
-          <a class="navigation-link" href="{% url 'suggestions' %}"><i class="fas fa-user-plus" style="color: #ffffff; font-size: 20px"></i></a>
-          <a class="navigation-link" href="{% url 'post-create' %}"><i class="fas fa-plus-square" style="color: #ffffff; font-size: 20px"></i></a>
+          <a class="navigation-link web" href="{% url 'suggestions' %}"><i class="fas fa-user-plus" style="color: #ffffff; font-size: 20px"></i></a>
+          <a class="navigation-link web" href="{% url 'post-create' %}"><i class="fas fa-plus-square" style="color: #ffffff; font-size: 20px"></i></a>
           <a href="{% url 'profile' %}" class="navigation-link">
             <i class="far fa-user-circle" style="color: #ffffff; font-size: 20px"></i>
           </a>
@@ -372,6 +378,29 @@
           </div>
         </div>
       </main>
+      <footer>
+        <div class="bottom-navbar navbar navbar-dark bg-dark">
+          <div class="navigation-icons" style="width: 100%; justify-content: center;">
+            <a href="{% url 'blog-home' %}" class="navigation-link">
+              <i class="fas fa-home" style="color: #ffffff;"></i>
+            </a>
+            <a class="navigation-link notifica" href="{% url 'quesans:clist' %}">
+              <i class="fas fa-question" style="color: #ffffff; font-size: 20px;">
+                <div class="notification-bubble-wrapper">
+                  <div class="notification-bubble">
+                    <span class="notifications-count">99</span>
+                  </div>
+                </div>
+              </i>
+            </a>
+            <a href="#" class="navigation-link">
+              <i class="fas fa-bell" style="color: #ffffff; font-size: 20px;"></i>
+            </a>
+            <a class="navigation-link" href="{% url 'post-create' %}"><i class="fas fa-plus-square" style="color: #ffffff; font-size: 20px"></i></a>
+            <a href="" class="navigation-link"><i class="fas fa-search" style="color: #ffffff; font-size: 20px"></i></a>
+          </div>
+        </div>
+      </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
