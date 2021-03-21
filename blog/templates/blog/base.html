@@ -302,7 +302,7 @@
             <i class="fas fa-home" style="color: #ffffff;"></i>
           </a> -->
           <a class="navigation-link notifica web" href="{% url 'quesans:clist' %}">
-            <i class="fas fa-question" style="color: #ffffff;">
+            <i class="fas fa-question" style="color: #ffffff; font-size: 20px;">
               <div class="notification-bubble-wrapper">
                 <div class="notification-bubble">
                   <span class="notifications-count">99</span>
@@ -310,17 +310,17 @@
               </div>
             </i>
           </a>
-          <a class="navigation-link" href="{% url 'suggestions' %}"><i class="fas fa-user-plus" style="color: #ffffff;"></i></a>
-          <a class="navigation-link" href="{% url 'post-create' %}"><i class="fas fa-plus-square" style="color: #ffffff;"></i></a>
+          <a class="navigation-link" href="{% url 'suggestions' %}"><i class="fas fa-user-plus" style="color: #ffffff; font-size: 20px"></i></a>
+          <a class="navigation-link" href="{% url 'post-create' %}"><i class="fas fa-plus-square" style="color: #ffffff; font-size: 20px"></i></a>
           <a href="{% url 'profile' %}" class="navigation-link">
-            <i class="far fa-user-circle" style="color: #ffffff;"></i>
+            <i class="far fa-user-circle" style="color: #ffffff; font-size: 20px"></i>
           </a>
           <a href="{% url 'logout' %}" id="signout" class="navigation-link">
-            <i class="fas fa-sign-out-alt" style="color: #ffffff;"></i>
+            <i class="fas fa-sign-out-alt" style="color: #ffffff; font-size: 20px"></i>
           </a>
           {% else %}
-          <a class="navigation-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt" style="color: #ffffff;"></i></a>
-          <a class="navigation-link" href="{% url 'register' %}"><i class="fas fa-id-badge" style="color: #ffffff;"></i></a>
+          <a class="navigation-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt" style="color: #ffffff; font-size: 20px"></i></a>
+          <a class="navigation-link" href="{% url 'register' %}"><i class="fas fa-id-badge" style="color: #ffffff; "></i></a>
           {% endif %}
         </div>
       </div>

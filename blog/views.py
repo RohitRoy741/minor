@@ -129,3 +129,7 @@ def LikeView(request, pk):
     }
     return JsonResponse(data, safe=False)
     return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
+
+
+def DevelopmentView(request):
+    return render(request,'blog/DevelopmentTeam.html')
