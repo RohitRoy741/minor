@@ -9,8 +9,19 @@
         </div>
     </div>
     <div style="display: flex; flex-direction: row; justify-content: space-around;">
-      <p class="btn btn-secondary bt-sm mt-1">{{ object.following.count }} followers</p>
-      <p class="btn btn-secondary bt-sm mt-1">{{ object.user.following.count }} following</p>
+      <div style="text-align: center; width: 25%;">
+        <p class="mt-0 mb-0">{{ profile.user.posts.count }}</p>
+        <p>Posts</p>
+      </div>
+      <div style="text-align: center; width: 25%;">
+        <p class="mt-0 mb-0">{{ profile.following.count }}</p>
+        <p>Followers</p>
+      </div>
+      <div style="text-align: center; width: 25%;">
+        <p class="mt-0 mb-0 ">{{ profile.user.following.count }}</p>
+       <p>Following</p>
+      </div>
+    </div>
       {% if following %}
         <form action="{% url 'follow' object.pk %}" method="POST" class="mt-1">
           {% csrf_token %}
@@ -22,7 +33,6 @@
           <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ object.id }}">Follow</button>
         </form>
       {% endif %}
-    </div>
   </div>
   <h2>Posts</h2>
   {% for post in posts %}
