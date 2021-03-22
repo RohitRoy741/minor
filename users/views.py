@@ -6,9 +6,9 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from blog.models import Post
 from .models import Profile
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
-#from . import face_id as fi
+from . import face_id as fi
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView
@@ -38,11 +38,42 @@ class CustomLogin(LoginView):
             user = authenticate(request, username=username, password=password)
             profile = Profile.objects.get(user=user)
             if profile.two_factor:
-                if fi.faceLogin(profile.face_encode.url, profile.user.username):
-                    return self.form_valid(form)
+                request.session['username'] = username
+                request.session['password'] = password
+                return redirect('twofactorauth')
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+def TwoFactorAuth(request):
+    return render(request, 'users/facelogin.html')
+
+
+def postFaceLogin(request):
+    username = request.session.get('username')
+    password = request.session.get('password')
+    user = authenticate(request, username=username, password=password)
+    if request.method == 'POST':
+        import json
+        post_data = json.loads(request.body.decode("utf-8"))
+        import base64
+        from django.core.files.base import ContentFile
+        format, imgstr = post_data['imageString'].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        file_name = user.username+'.'+ext
+        user.profile.face.save(file_name, data, save=True)
+        if fi.faceLogin(user):
+            print('Face login successful')
+            user.profile.face.delete(save=True)
+            login(request, user)
+            return HttpResponseRedirect(reverse('blog-home'))
+        user.profile.face.delete(save=True)
+        print('facelogin unsuccessful')
+        messages.error(
+            request, 'Face could not be encoded! Make sure your face is visible')
+    return HttpResponseRedirect(reverse('login'))
 
 
 @login_required
@@ -52,13 +83,11 @@ def profile(request):
         p_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
-            instance = p_form.save(commit=False)
-            if instance.two_factor == True:
-                fi.faceCapture(instance)
-                instance.save()
-            instance.save()
             messages.success(
                 request, f'Your account has been updated!')
+            instance = p_form.save(commit=True)
+            if instance.two_factor == True:
+                return redirect('webcam')
             return redirect('profile')
 
     else:
@@ -136,3 +165,27 @@ class ProfileDetailView(DetailView):
         context["following"] = following
         context['posts'] = Post.objects.all()
         return context
+
+
+def webcam(request):
+    return render(request, 'users/headshot.html')
+
+
+def postHeadShot(request):
+    if request.method == 'POST':
+        import json
+        post_data = json.loads(request.body.decode("utf-8"))
+        import base64
+        from django.core.files.base import ContentFile
+        format, imgstr = post_data['imageString'].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        file_name = request.user.username+'.'+ext
+        request.user.profile.face.save(file_name, data, save=True)
+        if fi.faceCapture(request):
+            request.user.profile.face.delete(save=True)
+            return HttpResponseRedirect(reverse('blog-home'))
+        request.user.profile.face.delete(save=True)
+        messages.error(
+            request, 'Face could not be encoded! Make sure your face is visible')
+    return HttpResponseRedirect(reverse('profile'))
