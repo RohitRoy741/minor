@@ -24,16 +24,16 @@ def faceLogin(user):
 
 
 def faceCapture(request):
-    directory = settings.MEDIA_ROOT+r'\face_encodes'
+    directory = settings.MEDIA_ROOT+r'/face_encodes'
     os.chdir(directory)
     image = fr.load_image_file(request.user.profile.face.path)
     face_locations = fr.face_locations(image)
     face_encodings = fr.face_encodings(image, face_locations)
     if face_encodings != []:
         face = str(request.user.username)+'.txt'
-        with open(directory+'\\'+face, 'w') as file:
+        with open(directory+'/'+face, 'w') as file:
             file.write(str(face_encodings))
-        file = open(directory+'\\'+face, 'rb')
+        file = open(directory+'/'+face, 'rb')
         face_file = File(file)
         request.user.profile.face_encode.save(face, face_file, save=True)
         return True
