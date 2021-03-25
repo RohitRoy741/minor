@@ -218,6 +218,10 @@
 			  .navigation-icons {
 			    display: flex;
 			  }
+        .mobile-no-pad{
+          padding-left: 0px;
+          padding-right: 0px;
+        }
 			}
 			.navigation-icons {
 			  display: flex;
@@ -276,6 +280,9 @@
         .bottom-navbar {
           display: none;
         }
+      }
+      ::placeholder {
+        color: #eff2f5;
       }
     </style>
 </head>
@@ -346,7 +353,7 @@
              </div>
             {% endfor %}
           </div>
-          <div class="col-md-5">
+          <div class="col-md-5 mobile-no-pad">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
