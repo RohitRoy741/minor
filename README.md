@@ -10,7 +10,7 @@ default database of django.
 
 <ul>
   <li>New Users can register and then subsequently login to their account.</li>
-  ![login](images/login.png)
+  ![](images/login.png)
   <li>Logged in users can create posts which will be visible to all the users who follow them.</li>
   <li>Users can also create requests to follow other users.</li>
   <li>Follow requests will be visible on the homepage which can be accepted.</li>
