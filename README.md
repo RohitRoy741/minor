@@ -10,35 +10,62 @@ default database of django.
 
 <ul>
   <li>New Users can register and then subsequently login to their account.</li>
+  <br><br>
   
   ![](images/Login.png)
 
+<br><br>
+
 ![](images/Register.png)
 
+<br><br>
+
   <li>Logged in users can create posts which will be visible to all the users who follow them.</li>
+  <br><br>
 
 ![](images/NewPost.png)
 ![](images/Home1.png)
 
+<br><br>
+
   <li>Users can also create requests to follow other users.</li>
-  
-  ![](images/Follow.png)
+
+<br><br>
+
+![](images/Follow.png)
+
+<br><br>
 
   <li>Follow requests will be visible on the homepage which can be accepted.</li>
+  <br><br>
 
 ![](images/Home2.png)
 
+<br><br>
+
   <li>Authenticated Users can also like and comment on the posts of other users who have followed them.</li>
-   
-  ![](images/Like.png)
+
+<br><br>
+
+![](images/Like.png)
+
+<br><br>
 
   <li>A suggestion link at the navbar provides a list of users to follow.</li>
-   
-  ![](images/Suggestion.png)
+
+<br><br>
+
+![](images/Suggestion.png)
+
+<br><br>
 
   <li>A Question and Answer section where authenticated users can ask and answer questions.</li>
 
+<br><br>
+
 ![](images/QA.png)
+
+<br><br>
 
 </ul>
 
