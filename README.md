@@ -2,9 +2,11 @@
 
 ## Introduction
 
-The django web app performs most of the basic functions of a social application like facebook, instagram and twiiter.
-The application's backend is completely written in python using django framework and database used is SQLite3 which is
-default database of django.
+Hello everyone, my name is Rohit and I am a third year CS student. This is the repository of my 6th sem
+minor project which is a college social network. The web app's backend is written completely in django with
+a little bit of Ajax for asynchronous works. In the development of this application I am applying the skills
+of OOP and RDBMS that i learned in my previous semesters. Also I am learning new skills like Django, Ajax, SQLite, etc to complement my theoretical knowledge. <br>
+The motivation for this project is to put up the complete social aspect of my college on the Internet, something which Facebook was initially developed to acheive but failed to do so. I am trying to create a safe refuge for already stressed college students to share their everyday struggles, acheivements, happiness, etc, on a social network without being Guinea pigs for AI algorithms milking them for their attention.
 
 ## Features
 
