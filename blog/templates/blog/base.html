@@ -25,19 +25,19 @@
         filter: brightness(105%) contrast(110%);
       }
       body {
-        background:#121212;
+        background:#242222;
         color: #fff;
         box-sizing: border-box;
       }
       .content-section {
-        border: rgb(77, 73, 73) solid 1px;
+        border: rgb(145, 143, 143) solid 1px;
         background: #000000;
         padding: 0.5rem 1rem;
         margin-bottom: 20px;
       }
       .article-metadata {
         padding-bottom: 1px;
-        margin-bottom: 4px;
+        margin-bottom: 20px;
         border-bottom: #000 solid 1px;
         display: flex;
         flex-direction: row;
@@ -47,8 +47,8 @@
         color: #c2baba;
       }
       .article-img {
-        height: 5rem;
-        width: 5rem;
+        height: 4rem;
+        width: 4rem;
         margin-right: 16px;
       }
       p.article-content {
@@ -104,10 +104,10 @@
         justify-content: center;
       }
       .member{
-        margin: 2rem;
         border-radius: 8px;
         padding-bottom: 1rem;
         background-color: rgb(20, 22, 33);
+        text-align: center;
       }
       .member-details{
         margin-top: 0.5rem;
@@ -132,6 +132,7 @@
       .request-container{
         border: #c2baba solid 1px;
         padding: 0.7rem 0.5rem;
+        background-color: black;
       }
       .request-meta-container{
         display: flex;
@@ -193,10 +194,12 @@
 		  padding: 3px 20px;
 		  padding-left: 25px;
 		  height: 30px;
+      width: 450px;
 		  box-sizing: border-box;
 		  border: 1px solid rgba(235, 225, 225, 0.098);
 		  border-radius: 3px;
 		  font-size: 14px;
+      color: white;
 		}
 
 		.navigation-search-container .fa-search {
@@ -284,6 +287,41 @@
       ::placeholder {
         color: #eff2f5;
       }
+      .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+          position: relative;
+          width: 100%;
+          padding-right: 7px;
+          padding-left: 7px;
+      }
+      .article-img-alt {
+        height: 7rem;
+        width: 7rem;
+      }
+      .profile-card{
+        border: 1px solid rgb(204, 206, 207); 
+        padding: 15px;
+        background-color: black;
+      }
+      .profile-meta{
+        text-align: center;
+        border-bottom: 0.5px solid rgb(230, 224, 224);
+        margin-bottom: 15px;
+      }
+      .req-container{
+        margin-top: 10px;
+        border: 1px solid rgb(204, 206, 207); 
+        padding: 15px;
+        background-color: black;
+      }
+      .req-meta{
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .request-action{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
     </style>
 </head>
 <body>
@@ -337,23 +375,8 @@
     <main role="main" class="container">
         <div class="row">
           <div class="col-md-3 web">
-            <p>Follow Requests</p>
-            {% for request in user.profile.follow_request.all %}
-              <div class="request-container mb-1">
-                <div class="request-meta-container">
-                  <img src="{{ request.profile.image.url }}" class="article-img rounded-circle">
-                  <div class="styler">
-                    <small>@{{ request.username }}</small>
-                    <form action="{% url 'accept-follow-request' request.pk %}" method="POST" class="mt-1">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ user.profile.id }}">Accept</button>
-                    </form>
-                  </div>
-                </div>
-             </div>
-            {% endfor %}
           </div>
-          <div class="col-md-5 mobile-no-pad">
+          <div class="col-md-6 mobile-no-pad">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
@@ -364,20 +387,40 @@
             {% block content %}{% endblock %}
             {% block scripts %}{% endblock %}
           </div>
-          <div class="col-md-4 web" width="100%">
-            <h3 style="margin-left:2rem">Developed By</h3>
-            <div class="team-members">
-              <div class="member">
-                <img src="/media/profile_pics/RohitProfilePic.jpg"  width="300px" height="300px" style="border-radius: 8px 8px 0px 0px;">
-                <p class="member-details" style="font-size: x-large; font-weight: 500;">Rohit</p>
-                <p class="member-details">Backend Developer</p>
+          <div class="col-md-3 web" width="100%">
+            {% if user.is_authenticated %}
+            <div class="profile-card">
+              <div class="profile-meta">
+                <h5>My Profile</h5>
+                <img class="rounded-circle article-img-alt" src="{{ user.profile.image.url }}">
+                <br>
+                <br>
+                <h5>{{ user.username }}</h5>
+                <br>
               </div>
-              <div class="member">
-                <img src="/media/profile_pics/avatar.jpg" width="300px" height="300px" style="border-radius: 8px 8px 0px 0px;">
-                <p class="member-details" style="font-size: x-large; font-weight: 500;">Manveer</p>
-                <p class="member-details">Machine Learning Enginner</p>
-              </div>
+              <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  user.profile.city }}, {{ user.profile.state }}</p>
+              <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ user.profile.branch }}, {{ user.profile.programme }}</p>
             </div>
+            {% for request in user.profile.follow_request.all %}
+                  <div class="req-container">
+                    <div class="req-meta">
+                      <h6>Follow Request</h6>
+                      <img src="{{ request.profile.image.url }}" height="150px" width="150px">
+                      <br>
+                      <small>@{{ request.username }}</small>
+                    </div>
+                    <div class="request-action">
+                      <form action="{% url 'accept-follow-request' request.pk %}" method="POST" class="mt-1">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" name="profile_id" value="{{ user.profile.id }}">Accept</button>
+                      </form>
+                      <form class="mt-1">
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                      </form>
+                    </div>
+                  </div>
+            {% endfor %}
+            {% endif %}
           </div>
         </div>
       </main>
