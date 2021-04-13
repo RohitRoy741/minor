@@ -1,18 +1,24 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<p>Follow Requests</p>
+<div style="text-align: center;">
 {% for request in user.profile.follow_request.all %}
-    <div class="request-container mb-1">
-        <div class="request-meta-container">
+    <div class="suggest profile-card mb-1">
+        <div class="profile-meta suggest-meta">
             <img src="{{ request.profile.image.url }}" class="article-img rounded-circle">
-            <div class="styler">
-            <small>@{{ request.username }}</small>
+            <a href="{% url 'profile-page' request.profile.id %}" style="text-decoration: none; color: blanchedalmond;"></a><p>{{ request.username }}</p></a>
+        </div> 
+        <div style="display: flex; flex-direction: row; justify-content: space-around;">
             <form action="{% url 'accept-follow-request' request.pk %}" method="POST" class="mt-1">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ user.profile.id }}">Accept</button>
             </form>
-            </div>
-        </div>
+            <form class="mt-1">
+                <button class="btn btn-danger btn-sm">Reject</button>
+            </form>
+        </div>   
+            
+        
     </div>
 {% endfor %}
+</div>
 {% endblock content %}
