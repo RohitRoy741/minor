@@ -160,9 +160,13 @@ class ProfileDetailView(DetailView):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         profile = get_object_or_404(Profile, id=self.kwargs['pk'])
         following = False
+        requested = False
         if profile.following.filter(id=self.request.user.id).exists():
             following = True
+        elif profile.follow_request.filter(id=self.request.user.id).exists():
+            requested = True
         context["following"] = following
+        context['requested'] = requested
         context['posts'] = Post.objects.all()
         return context
 

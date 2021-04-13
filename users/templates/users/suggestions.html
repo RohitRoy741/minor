@@ -4,17 +4,18 @@
     {% for profile in profiles %}
         <div class="suggest profile-card">
           <div class="profile-meta suggest-meta">
-            <p>{{ profile.user.username }}</p>
+            <a href="{% url 'profile-page' profile.id %}" style="text-decoration: none; color: blanchedalmond;"><p>{{ profile.user.username }}</p></a>
             <img class="rounded-circle article-img" src="{{ profile.image.url }}">
           </div>
           <div style="display: flex; flex-direction: row; justify-content: space-around;">
-            <div style="text-align: center; width: 25%;">
-              <p class="mt-0 mb-0">{{ profile.user.posts.count }}</p>
-              <p>Posts</p>
-            </div>
+            
             <div style="text-align: center; width: 25%;">
               <p class="mt-0 mb-0">{{ profile.following.count }}</p>
               <p>Followers</p>
+            </div>
+            <div style="text-align: center; width: 25%;">
+              <p class="mt-0 mb-0">{{ profile.user.posts.count }}</p>
+              <p>Posts</p>
             </div>
             <div style="text-align: center; width: 25%;">
               <p class="mt-0 mb-0 ">{{ profile.user.following.count }}</p>

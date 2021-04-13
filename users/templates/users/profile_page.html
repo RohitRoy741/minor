@@ -1,6 +1,42 @@
 {% extends "blog/base.html" %}
 {% block content %}
-  <div class="content-section" style="text-align: center;">
+  <div class="profile-page">
+    <div class="profile-image">
+      <img src="{{ object.image.url }}">
+    </div>
+    <div class="profile-data">
+      <h5>{{ object.user.username }}</h5>
+      <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  object.city }}, {{ object.state }}</p>
+      <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ object.branch }}, {{ object.programme }}</p>
+      <i class="fa fa-envelope" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i><small>{{ object.user.email }}</small>
+      <div style="display: flex; flex-direction: row; justify-content: space-around;" class="mt-3">
+        {% if following %}
+        <form action="{% url 'follow' object.pk %}" method="POST" class="mt-1">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success bt-sm" name="profile_id" value="{{ object.id }}">Following</button>
+        </form>
+        {% else %}
+          {% if requested %}
+          <form action="{% url 'follow-request' object.pk %}" method="POST" class="mt-1">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ object.id }}">Requested</button>
+          </form>
+          {% else %}
+          <form action="{% url 'follow-request' object.pk %}" method="POST" class="mt-1">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ object.id }}">Follow</button>
+          </form>
+          {% endif %}
+        {% endif %}
+        <form class="mt-1">
+          <button class="btn btn-danger ">Report</button>
+        </form>
+      </div>
+
+    </div>
+    
+  </div>
+  <!-- <div class="content-section" style="text-align: center;">
     <img class="rounded-circle account-img" src="{{ object.image.url }}">
     <div class="media" style="text-align: center;">
         <div class="media-body">
@@ -33,7 +69,7 @@
           <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ object.id }}">Follow</button>
         </form>
       {% endif %}
-  </div>
+  </div> -->
   <h2>Posts</h2>
   {% for post in posts %}
     {% ifequal profile.user post.author %}
