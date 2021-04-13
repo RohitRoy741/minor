@@ -144,7 +144,7 @@
         padding: 0%;
         margin-right: 0.5rem;
         border: none;
-        background-color: rgb(7, 7, 7);
+        background-color: transparent;
       }
       button:focus {
         outline: 1px dotted;
@@ -327,10 +327,19 @@
         border: 1px solid rgb(204, 206, 207); 
         background-color: black;
         padding: 15px;
+        margin-bottom: 10px;
       }
       .event-meta{
         text-align: center;
         height: 30vh;
+      }
+      .dsw{
+        border: 1px solid rgb(204, 206, 207); 
+        background-color: black;
+        padding: 15px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align: center;
       }
     </style>
 </head>
@@ -392,6 +401,18 @@
               </div>
               <p>Time: All day</p>
               <p>Venue: MS Teams</p>
+              <button class="btn btn-success">Read More</button>
+              <button class="btn btn-primary">Contact</button>
+            </div>
+            <div class="event">
+              <div class="event-meta">
+                <h5>Club Event</h5>
+                <img src="../../../media/blog_images/CodingBlocks.png" alt="" height="150px" width="100%">
+              </div>
+              <p>25th April</p>
+              <p>Platform: Coding Blocks</p>
+              <button class="btn btn-success">Read More</button>
+              <button class="btn btn-primary">Contact</button>
             </div>
           </div>
           <div class="col-md-6 mobile-no-pad">
@@ -413,7 +434,7 @@
                 <img class="rounded-circle article-img-alt" src="{{ user.profile.image.url }}">
                 <br>
                 <br>
-                <h5>{{ user.username }}</h5>
+                <a href="{% url 'profile' %}" ><h5>{{ user.username }}</h5></a>
                 <br>
               </div>
               <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  user.profile.city }}, {{ user.profile.state }}</p>
@@ -439,6 +460,12 @@
                   </div>
             {% endfor %}
             {% endif %}
+            <div class="dsw">
+              <h5>DSW Desk</h5>
+              <p>Happiness cannot be far behind a grateful heart and peaceful mind.</p>
+              <button class="btn btn-success">Read More</button>
+              <button class="btn btn-primary">Contact</button>
+            </div>
           </div>
         </div>
       </main>
