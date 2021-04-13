@@ -1,4 +1,5 @@
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -322,6 +323,15 @@
         flex-direction: row;
         justify-content: space-around;
       }
+      .event{
+        border: 1px solid rgb(204, 206, 207); 
+        background-color: black;
+        padding: 15px;
+      }
+      .event-meta{
+        text-align: center;
+        height: 30vh;
+      }
     </style>
 </head>
 <body>
@@ -375,6 +385,14 @@
     <main role="main" class="container">
         <div class="row">
           <div class="col-md-3 web">
+            <div class="event">
+              <div class="event-meta">
+                <h5>University Election</h5>
+                <img src="../../../media/blog_images/event.jpg" alt="" height="150px" width="100%">
+              </div>
+              <p>Time: All day</p>
+              <p>Venue: MS Teams</p>
+            </div>
           </div>
           <div class="col-md-6 mobile-no-pad">
             {% if messages %}
