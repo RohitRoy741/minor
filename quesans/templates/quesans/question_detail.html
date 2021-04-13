@@ -4,29 +4,68 @@
     <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
     <div class="media-body">
     <div class="article-metadata">
-        <a class="mr-2" href="#">{{question.author}}</a>
+        <a class="mr-2" href="{% url 'profile-page' question.author.id %}">{{question.author}}</a>
         <small class="text-muted">{{question.created_on}}</small>
     </div>
     <h2>{{ question.title }}</h2>
     <p class="article-content">{{ question.desc }}</p>
+    {% if question.image %}
+    <img class="img-fluid mx-auto d-block" src="{{ question.image.url }}">
+    <br>
+    {% endif %}
+    {% if question.author == user %}
     <a href="{% url 'quesans:qupdate' question.pk %}" class='btn btn-info' role='button'>Edit</a>
+    {% endif %}
     </div>
+    {% if question.answered %}
+    <span class="badge badge-danger">Closed</span>
+    {% else %}
+    <span class="badge badge-success">Open</span>
+    {% endif %}
 </article>
+{% if question.author == user and not question.answered %}
+<form action="{% url 'quesans:ques-flag' question.slug %}" method="POST" style="display: inline-block;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary bt-sm mt-1" name="question_id" value="{{ question.id }}">Close Question</button>
+</form>
+{% endif %}
+<br>
+<h2 class="display-4">Answers -</h2>
 {% for answer in answers %}
 <article class="media content-section" style="margin-top:20px, margin-bottom:50px">
+  <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50' >
   <div class="media-body">
     <div class="article-metadata">
       {% if answer.is_anonymous %}
       <small class="text-muted">Anonymous</small>
       {% else %}
-      <a class="mr-3" href="#">{{answer.user.username}}</a>
+      <a class="mr-3" href="{% url 'profile-page' question.author.id %}">{{answer.user.username}}</a>
       {% endif %}
       <small class="text-muted">{{answer.date}}</small>
     </div>
     <p class="article-content">{{answer.answer_text}}</p>
+    {% if answer.image %}
+    <img class="img-fluid mx-auto d-block" src="{{ answer.image.url }}">
+    <br>
+    {% endif %}
+    <p>Upvotes: {{answer.upvote.count}}</p>
+    <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Upvote</button>
+    </form>
+    <p>Downvotes: {{answer.downvote.count}}</p>
+    <form action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Downvote</button>
+    </form>
+    {% if answer.user == user %}
     <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
+    {% endif %}
   </div>
 </article>
+<a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Replies</a>
 {% endfor %}
+{% if not question.answered %}
 <a href="{% url 'quesans:postans' question.pk %}" class='btn btn-info' role='button'>Add an answer</a>
+{% endif %}
 {% endblock %}

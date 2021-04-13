@@ -11,6 +11,22 @@ def home(request):
     return render(request, 'blog/home.html')
 
 
+class SearchView(ListView):
+    model = User
+    template_name = 'blog/base.html'
+    context_object_name = 'search_results'
+
+    def get_queryset(self):
+        result = super(SearchView, self).get_queryset()
+        query = self.request.GET.get('search')
+        if query:
+            postresult = User.objects.filter(username__contains=query)
+            result = postresult
+        else:
+            result = None
+        return result
+
+
 class PostListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'blog/home.html'

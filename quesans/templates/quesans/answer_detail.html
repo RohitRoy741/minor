@@ -1,0 +1,52 @@
+{% extends 'quesans/base_layout.html' %}
+{% block content %}
+<article class="media content-section" style="margin-top:20px, margin-bottom:50px">
+  <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50' >
+  <div class="media-body">
+    <div class="article-metadata">
+      {% if answer.is_anonymous %}
+      <small class="text-muted">Anonymous</small>
+      {% else %}
+      <a class="mr-3" href="{% url 'profile-page' answer.user.id %}">{{answer.user.username}}</a>
+      {% endif %}
+      <small class="text-muted">{{answer.date}}</small>
+    </div>
+    <p class="article-content">{{answer.answer_text}}</p>
+    {% if answer.image %}
+    <img class="img-fluid mx-auto d-block" src="{{ answer.image.url }}">
+    <br>
+    {% endif %}
+    <p>Upvotes: {{answer.upvote.count}}</p>
+    <form action="{% url 'quesans:upvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Upvote</button>
+    </form>
+    <p>Downvotes: {{answer.downvote.count}}</p>
+    <form action="{% url 'quesans:downvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Downvote</button>
+    </form>
+    {% if answer.user == user %}
+    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
+    {% endif %}
+  </div>
+</article>
+<h3>Add Reply to original thread</h3>
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ reply_form.as_p }}
+            <button type="submit" name ='reply-done' class="btn btn-primary">Reply</button>
+        </form>
+        {% with replies.count as total_replies %}
+            <h3 class="mt-5">
+                {{ total_replies }} Reply{{ total_replies|pluralize }}
+            </h3>
+        {% endwith %}
+        {% if not answer.replies.all %}
+            No replies yet
+        {% else %}
+            {% for reply in answer.get_replies %}
+                {% include 'quesans/reply.html' with reply=reply %}
+            {% endfor %}
+        {% endif %}
+{% endblock %}

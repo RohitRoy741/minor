@@ -1,0 +1,29 @@
+{% extends 'quesans/base_layout.html' %}
+{% block content %}
+<h4 class="display-4">Can't find a question? Search for it here</h4>
+<br>
+    <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'quesans:qsearch' %}" >
+            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Enter title">
+            <button class="btn btn btn-outline-info my-2 my-sm-0" type="submit"> Search </button>
+    </form>
+<br>
+<h3 class="display-4">Your Results -</h3>
+{% for question in search_results %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+    <div class="media-body">
+    <div class="article-metadata">
+        <a class="mr-2" href="{% url 'profile-page' question.author.id %}">{{question.author}}</a>
+        <small class="text-muted">{{question.created_on}}</small>
+    </div>
+    <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
+    <p class="article-content">{{ question.snippet }}</p>
+    </div>
+</article>
+<br>
+{% empty %}
+<div class="container-fluid my-3 pt-4">
+  <h3 class="display-3">No Results found!</h3>
+</div>
+{% endfor %}
+{% endblock %}

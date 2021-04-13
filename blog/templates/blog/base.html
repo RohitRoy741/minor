@@ -379,17 +379,16 @@
             Network
           </a>
         </div>
-        <div class="navigation-search-container">
-          <i class="fa fa-search"></i>
-          <input class="search-field" type="text" placeholder="Search">
-          <div class="search-container">
-            <div class="search-container-box">
-              <div class="search-results">
-    
+        <form method="GET" action="{% url 'search' %}">
+          <div class="navigation-search-container">
+            <i class="fa fa-search"></i>
+            <input class="search-field" type="search" name="search" placeholder="Search">
+            <div class="search-container">
+              <div class="search-container-box">
               </div>
             </div>
           </div>
-        </div>
+        </form>
         <div class="navigation-icons">
           {% if user.is_authenticated %}
           <!-- <a href="{% url 'blog-home' %}" class="navigation-link">
@@ -451,6 +450,25 @@
                 </div>
               {% endfor %}
             {% endif %}
+            <div class="search-results">
+              {% for user in search_results %}
+              <div class="profile-page">
+                <div class="profile-image">
+                  <img src="{{ user.profile.image.url }}">
+                </div>
+                <div class="profile-data">
+                  <h5>{{ user.username }}</h5>
+                  <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  user.profile.city }}, {{ user.profile.state }}</p>
+                  <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ user.profile.branch }}, {{ user.profile.programme }}</p>
+                  <i class="fa fa-envelope" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i><small>{{ user.email }}</small>
+                  <div style="display: flex; flex-direction: row; justify-content: space-around;" class="mt-3">
+                    <button class="btn btn-primary"><a href="{% url 'profile-page' user.profile.id %}" style="text-decoration: none; color: white;" >Visit</a></button>
+                    <button class="btn btn-success">Contact</button>
+                  </div>
+                </div>                
+              </div> 
+              {% endfor %}
+              </div>
             {% block content %}{% endblock %}
             {% block scripts %}{% endblock %}
           </div>

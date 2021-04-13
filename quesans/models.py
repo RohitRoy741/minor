@@ -8,8 +8,10 @@ class Question(models.Model):
     desc = models.TextField()
     author=models.ForeignKey(User,on_delete=models.CASCADE,default=None)
     created_on = models.DateTimeField(auto_now=True)
+    image = models.ImageField(null=True,blank=True,upload_to ='ques_images/')
+    answered = models.BooleanField(default=False)
     slug=models.SlugField()
-    #add image
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Question, self).save(*args, **kwargs)
@@ -30,6 +32,9 @@ class Answer(models.Model):
     answer_text = models.TextField()
     date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
+    upvote = models.ManyToManyField(User,related_name = 'upvote')
+    downvote = models.ManyToManyField(User,related_name = 'downvote')
+    image = models.ImageField(null=True,blank=True,upload_to ='ans_images/')
 
     def __str__(self):
         return self.question.title+'-'+self.user.username
@@ -38,9 +43,23 @@ class Answer(models.Model):
         #redirect back to question
         return reverse('quesans:qthread',kwargs={'slug':self.question.slug})
 
+    def get_replies(self):
+        return self.replies.filter(parent=None).filter(active=True)   
 
-class QuestionGroups(models.Model):
-    name = models.CharField(max_length=100)
+class Reply(models.Model):
+    answer=models.ForeignKey(Answer,on_delete=models.CASCADE, related_name="replies")
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    parent=models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
-    def __unicode__(self):
-        return self.name
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return self.body
+
+    def get_replies(self):
+        return Reply.objects.filter(parent=self).filter(active=True)
