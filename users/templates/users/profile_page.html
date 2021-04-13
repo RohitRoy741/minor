@@ -2,7 +2,8 @@
 {% block content %}
   <div class="profile-page">
     <div class="profile-image">
-      <img src="{{ object.image.url }}">
+      <img src="{{ object.image.url }}" class="web">
+      <img src="{{ object.image.url }}" class="mobile-profile-image">
     </div>
     <div class="profile-data">
       <h5>{{ object.user.username }}</h5>

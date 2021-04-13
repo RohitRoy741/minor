@@ -26,7 +26,7 @@
         filter: brightness(105%) contrast(110%);
       }
       body {
-        background:#242222;
+        background: #18191A;
         color: #fff;
         box-sizing: border-box;
       }
@@ -67,7 +67,7 @@
         border-radius: 5%;
       }
       .bg-steel {
-        background-color: #212121;
+        background-color: #18191A;
       }
       h3 {
         color: aliceblue;
@@ -198,7 +198,7 @@
       width: 450px;
 		  box-sizing: border-box;
 		  border: 1px solid rgba(235, 225, 225, 0.098);
-		  border-radius: 3px;
+		  border-radius: 30px;
 		  font-size: 14px;
       color: white;
 		}
@@ -282,6 +282,9 @@
       }
       @media only screen and (min-width: 650px) and (max-width: 1800px) {
         .bottom-navbar {
+          display: none;
+        }
+        .mobile-profile-image {
           display: none;
         }
       }
@@ -369,11 +372,19 @@
         width: 20vw;
         margin-right: 10px;
       }
+      .profile-image .mobile-profile-image{
+        height: 30vh;
+        width: 40vw;
+        margin-right: 10px;
+      }
+      .navbar{
+        background-color: #242526;
+      }
     </style>
 </head>
 <body>
     <header class="site-header">
-      <div class="navigation navbar navbar-dark bg-dark">
+      <div class="navigation navbar navbar-dark">
         <div class="logo">
           <a class="no-underline" href="/">
             Network
