@@ -22,6 +22,23 @@
         <title>Django Blog</title>
     {% endif %}
     <style>
+      body {
+        background: rgb(44, 43, 43);
+        color: #fff;
+        margin-top: 5rem;
+      }
+      .article-title {
+        color: #eee1e1;
+      }
+
+      a.article-title:hover {
+        color: #428bca;
+        text-decoration: none;
+      }
+
+      .article-content {
+        white-space: pre-line;
+      }
       html{
         filter: brightness(105%) contrast(110%);
       }
@@ -33,19 +50,23 @@
       .content-section {
         border: rgb(145, 143, 143) solid 1px;
         background: #000000;
-        padding: 0.5rem 1rem;
         margin-bottom: 20px;
+        padding: 0.5rem 0.5rem;
+      }
+      .home-content{
+        padding: 0;
       }
       .article-metadata {
         padding-bottom: 1px;
-        margin-bottom: 20px;
         border-bottom: #000 solid 1px;
         display: flex;
         flex-direction: row;
         align-items: center;
+        padding: 0.7rem 0.7rem;
       }
       .article-title {
         color: #c2baba;
+        margin-left: 0.7rem;
       }
       .article-img {
         height: 4rem;
@@ -54,17 +75,18 @@
       }
       p.article-content {
         font-size: 16px;
+        margin-left: 0.7rem;
       }
       a.article-title {
-          font-size: 30px;
+        font-size: 30px;
+        margin-left: 0.7rem;
       }
       .article-image {
         margin-left: auto;
         margin-right: auto;
         display: block;
         width: 100%;
-        height: 53vh;
-        border-radius: 5%;
+        max-height: 680px;
       }
       .bg-steel {
         background-color: #18191A;
@@ -92,6 +114,7 @@
       }
       .tags p{
         margin-right: 5%;
+        margin-left: 0.7rem;
       }
       .team-members{
         display: flex;
@@ -145,6 +168,9 @@
         margin-right: 0.5rem;
         border: none;
         background-color: transparent;
+      }
+      .like_button{
+        margin-left: 0.7rem;
       }
       button:focus {
         outline: 1px dotted;
@@ -226,6 +252,9 @@
           padding-left: 0px;
           padding-right: 0px;
         }
+        .home-content{
+          border:none;
+        }
 			}
 			.navigation-icons {
 			  display: flex;
@@ -285,6 +314,9 @@
           display: none;
         }
         .mobile-profile-image {
+          display: none;
+        }
+        .mobile{
           display: none;
         }
       }
@@ -379,6 +411,17 @@
       }
       .navbar{
         background-color: #242526;
+      }
+      a{
+        text-decoration: none !important; 
+      }
+      @media only screen and (min-width: 320px) and (max-width: 650px) {
+        .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+          position: relative;
+          width: 100%;
+          padding-right: 0px;
+          padding-left: 0px;
+      }
       }
     </style>
 </head>
@@ -526,6 +569,12 @@
           </div>
         </div>
       </main>
+      <br>
+      <br>
+      <br>
+      <div class="mobile" style="height: 50px; width: 100%; background-color: black;">
+
+      </div>
       <footer>
         {% if user.is_authenticated %}
         <div class="bottom-navbar navbar navbar-dark bg-dark">

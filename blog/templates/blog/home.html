@@ -3,7 +3,7 @@
     {% for post in posts %}
         {% for followed in user.following.all %}
             {% if followed.id == post.author.profile.id %}
-                <article class="content-section">
+                <article class="content-section home-content">
                     <div class="media-body">
                         <div class="article-metadata">
                             <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" >
