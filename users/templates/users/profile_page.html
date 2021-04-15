@@ -74,7 +74,7 @@
   <h2>Posts</h2>
   {% for post in posts %}
     {% ifequal profile.user post.author %}
-      <article class="content-section">
+      <article class="content-section home-content">
         <div class="media-body">
         <div class="article-metadata">
             <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" >

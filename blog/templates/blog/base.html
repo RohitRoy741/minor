@@ -22,6 +22,23 @@
         <title>Django Blog</title>
     {% endif %}
     <style>
+      body {
+        background: rgb(44, 43, 43);
+        color: #fff;
+        margin-top: 5rem;
+      }
+      .article-title {
+        color: #eee1e1;
+      }
+
+      a.article-title:hover {
+        color: #428bca;
+        text-decoration: none;
+      }
+
+      .article-content {
+        white-space: pre-line;
+      }
       html{
         filter: brightness(105%) contrast(110%);
       }
@@ -33,19 +50,23 @@
       .content-section {
         border: rgb(145, 143, 143) solid 1px;
         background: #000000;
-        padding: 0.5rem 1rem;
         margin-bottom: 20px;
+        padding: 0.5rem 0.5rem;
+      }
+      .home-content{
+        padding: 0;
       }
       .article-metadata {
         padding-bottom: 1px;
-        margin-bottom: 20px;
         border-bottom: #000 solid 1px;
         display: flex;
         flex-direction: row;
         align-items: center;
+        padding: 0.7rem 0.7rem;
       }
       .article-title {
         color: #c2baba;
+        margin-left: 0.7rem;
       }
       .article-img {
         height: 4rem;
@@ -54,17 +75,18 @@
       }
       p.article-content {
         font-size: 16px;
+        margin-left: 0.7rem;
       }
       a.article-title {
-          font-size: 30px;
+        font-size: 30px;
+        margin-left: 0.7rem;
       }
       .article-image {
         margin-left: auto;
         margin-right: auto;
         display: block;
         width: 100%;
-        height: 53vh;
-        border-radius: 5%;
+        max-height: 680px;
       }
       .bg-steel {
         background-color: #18191A;
@@ -92,6 +114,7 @@
       }
       .tags p{
         margin-right: 5%;
+        margin-left: 0.7rem;
       }
       .team-members{
         display: flex;
@@ -145,6 +168,9 @@
         margin-right: 0.5rem;
         border: none;
         background-color: transparent;
+      }
+      .like_button{
+        margin-left: 0.7rem;
       }
       button:focus {
         outline: 1px dotted;
@@ -379,6 +405,9 @@
       }
       .navbar{
         background-color: #242526;
+      }
+      a{
+        text-decoration: none !important; 
       }
     </style>
 </head>
