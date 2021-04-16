@@ -23,69 +23,63 @@
             </div>
           </div>
           <div  style="display: flex; flex-direction: row; justify-content: space-around;">
-            {% if profile.id in lst %}
-              <form action="{% url 'follow' profile.pk %}" method="POST" class="mt-1">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Following</button>
-              </form>
+            <form action="{% url 'follow' profile.pk %}" method="POST" class="mt-1 follow-form" id="{{ profile.id }}">
+              {% csrf_token %}
+              {% if profile.id in lst %}
+                <button type="submit" class="btn btn-success btn-sm follow-btn{{ profile.id }}" name="profile_id" value="{{ profile.id }}">Following</button>
               {% else %}
-                {% if profile.id in request_lst %}
-                  <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Requested</button>
-                  </form>
+                {% if profile.id in request_lst %} 
+                  <button type="submit" class="btn btn-success btn-sm follow-btn{{ profile.id }}" name="profile_id" value="{{ profile.id }}">Requested</button>
                 {% else %}
-                  <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ profile.id }}">Follow</button>
-                  </form>
+                  <button type="submit" class="btn btn-primary btn-sm follow-btn{{ profile.id }}" name="profile_id" value="{{ profile.id }}">Follow</button>  
                 {% endif %}
               {% endif %}
-              <form class="mt-1">
-                <button class="btn btn-danger btn-sm">Report</button>
-              </form>
+            </form>
+            <form class="mt-1">
+              <button class="btn btn-danger btn-sm">Report</button>
+            </form>
           </div>
         </div>
-        <!-- <div class="suggestion" style="width: 100%; text-align: center;">
-          <img width="100%" height="300vh" style="border-radius: 8px 8px 0px 0px;" src="{{ profile.image.url }}">
-          <div class="media" style="text-align: center;">
-              <div class="media-body">
-                  <p class="member-details" style="font-size: x-large; font-weight: 500;">{{ profile.user.username }}</p> 
-              </div>
-          </div>
-          <div style="display: flex; flex-direction: row; justify-content: space-around;">
-            <div style="text-align: center; width: 25%;">
-              <p class="mt-0 mb-0">{{ profile.user.posts.count }}</p>
-              <p>Posts</p>
-            </div>
-            <div style="text-align: center; width: 25%;">
-              <p class="mt-0 mb-0">{{ profile.following.count }}</p>
-              <p>Followers</p>
-            </div>
-            <div style="text-align: center; width: 25%;">
-              <p class="mt-0 mb-0 ">{{ profile.user.following.count }}</p>
-             <p>Following</p>
-            </div>
-          </div>
-          {% if profile.id in lst %}
-              <form action="{% url 'follow' profile.pk %}" method="POST" class="mt-1">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Following</button>
-              </form>
-              {% else %}
-                {% if profile.id in request_lst %}
-                  <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ profile.id }}">Requested</button>
-                  </form>
-                {% else %}
-                  <form action="{% url 'follow-request' profile.pk %}" method="POST" class="mt-1">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm " name="profile_id" value="{{ profile.id }}">Follow</button>
-                  </form>
-                {% endif %}
-              {% endif %}
-        </div> -->
     {% endfor %}
   </div>
 {% endblock content %}
+{% block scripts %}
+<script>
+  $(document).ready(function(){
+    $('.follow-form').submit(function(e){
+      e.preventDefault()
+      const profile_id = $(this).attr('id')
+      const url = $(this).attr('action')
+      const ftext = $(`.follow-btn${profile_id}`).text()
+      //console.log(ftext)
+      nftext = $.trim(ftext)
+      $.ajax({
+              type: 'POST',
+              url: url,
+              data: {
+                  'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                  'profile_id': profile_id,
+              },
+              success: function(response) {
+                  if(nftext=='Follow') {
+                    $(`.follow-btn${profile_id}`).removeClass("btn-primary")
+                    $(`.follow-btn${profile_id}`).addClass("btn-success")
+                    $(`.follow-btn${profile_id}`).text('Requested')                    
+                  } else if(nftext=='Requested') {
+                    $(`.follow-btn${profile_id}`).removeClass("btn-success")
+                    $(`.follow-btn${profile_id}`).addClass("btn-primary")
+                    $(`.follow-btn${profile_id}`).text('Follow') 
+                  } else {
+                    $(`.follow-btn${profile_id}`).removeClass("btn-success")
+                    $(`.follow-btn${profile_id}`).addClass("btn-primary")
+                    $(`.follow-btn${profile_id}`).text('Follow') 
+                  }
+              },
+              error: function(response) {
+                  console.log('error', response)
+              }
+          })
+    });
+  });
+</script>
+{% endblock scripts%}
