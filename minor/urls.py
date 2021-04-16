@@ -36,8 +36,8 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('quesans/', include('quesans.urls')),
     path('follow/<int:pk>', user_views.follow, name='follow'),
-    path('follow_request/<int:pk>',
-         user_views.follow_request, name='follow-request'),
+    # path('follow_request/<int:pk>',
+    #      user_views.follow_request, name='follow-request'),
     path('accept_request/<int:pk>',
          user_views.accept_follow_request, name='accept-follow-request'),
     path('suggestions/', user_views.ProfileListView.as_view(
