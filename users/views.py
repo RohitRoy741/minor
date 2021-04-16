@@ -111,18 +111,20 @@ def follow(request, pk):
     profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
     if profile.following.filter(id=request.user.id).exists():
         profile.following.remove(request.user)
-    else:
-        profile.following.add(request.user)
-    return HttpResponseRedirect(reverse('suggestions'))
-
-
-def follow_request(request, pk):
-    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
-    if profile.follow_request.filter(id=request.user.id).exists():
+    elif profile.follow_request.filter(id=request.user.id).exists():
         profile.follow_request.remove(request.user)
     else:
         profile.follow_request.add(request.user)
     return HttpResponseRedirect(reverse('suggestions'))
+
+
+# def follow_request(request, pk):
+#     profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
+#     if profile.follow_request.filter(id=request.user.id).exists():
+#         profile.follow_request.remove(request.user)
+#     else:
+#         profile.follow_request.add(request.user)
+#     return HttpResponseRedirect(reverse('suggestions'))
 
 
 def accept_follow_request(request, pk):
