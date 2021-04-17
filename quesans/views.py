@@ -15,14 +15,14 @@ class QuestionListView(ListView):
     model = Question
     template_name = 'quesans/listall.html'
     context_object_name = 'questions'
-    ordering = ['created_on']
+    ordering = ['answered','-created_on']
 
 
 class YourQuestionListView(LoginRequiredMixin, ListView):
     model = Question
     template_name = 'quesans/listall.html'
     context_object_name = 'questions'
-    ordering = ['created_on']
+    ordering = ['answered','-created_on']
 
     def get_queryset(self):
         questions = Question.objects.all().filter(author=self.request.user)
@@ -38,7 +38,7 @@ class SearchView(ListView):
         result = super(SearchView, self).get_queryset()
         query = self.request.GET.get('search')
         if query:
-            postresult = Question.objects.filter(title__contains=query)
+            postresult = Question.objects.filter(title__contains=query).order_by('answered','-created_on')
             result = postresult
         else:
             result = None
