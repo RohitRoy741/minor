@@ -49,13 +49,14 @@
     <br>
     {% endif %}
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
+    
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary bt-sm mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}">
+        <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
         {% if answer in lst %}
-        Upvoted <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
+        <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% else %}
-        Upvote <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
+        <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% endif %}
         </button>
     </form>
@@ -87,15 +88,15 @@
                 const upvotes = $(`.upvote-count${answer_id}`).text()
                 const trimCount = parseInt(upvotes)
                 //console.log(trimCount)
-                const upvoteText = $(`.upvote-btn${answer_id}`).text()
+                const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
                 //console.log(upvoteText)
                 trim = $.trim(upvoteText)
                 //console.log(trim)
                 if(trim == 'Upvoted') {
-                   $(`.upvote-btn${answer_id}`).text('Upvote') 
+                   $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>") 
                    res = trimCount - 1
                  } else {
-                    $(`.upvote-btn${answer_id}`).text('Upvoted')
+                    $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
                     res = trimCount + 1
                 }
                  $(`.upvote-count${answer_id}`).text(res)
