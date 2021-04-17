@@ -48,10 +48,16 @@
     <img class="img-fluid mx-auto d-block" src="{{ answer.image.url }}">
     <br>
     {% endif %}
-    <p>Upvotes: {{answer.upvote.count}}</p>
-    <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;">
+    Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
+    <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Upvote</button>
+        <button type="submit" class="btn btn-primary bt-sm mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}">
+        {% if answer in lst %}
+        Upvoted
+        {% else %}
+        Upvote
+        {% endif %}
+        </button>
     </form>
     <p>Downvotes: {{answer.downvote.count}}</p>
     <form action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;">
@@ -68,4 +74,47 @@
 {% if not question.answered %}
 <a href="{% url 'quesans:postans' question.pk %}" class='btn btn-info' role='button'>Add an answer</a>
 {% endif %}
+{% endblock %}
+{% block script %}
+<script>
+       $(document).ready(function(){
+            $('.upvote-form').submit(function(e){
+                e.preventDefault()
+                //console.log('success')
+                const answer_id = $(this).attr('id')
+                const url = $(this).attr('action')
+                let res;
+                const upvotes = $(`.upvote-count${answer_id}`).text()
+                const trimCount = parseInt(upvotes)
+                //console.log(trimCount)
+                const upvoteText = $(`.upvote-btn${answer_id}`).text()
+                //console.log(upvoteText)
+                trim = $.trim(upvoteText)
+                //console.log(trim)
+                if(trim == 'Upvoted') {
+                   $(`.upvote-btn${answer_id}`).text('Upvote') 
+                   res = trimCount - 1
+                 } else {
+                    $(`.upvote-btn${answer_id}`).text('Upvoted')
+                    res = trimCount + 1
+                }
+                 $(`.upvote-count${answer_id}`).text(res)
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'answer_id': answer_id,
+                    },
+                    success: function(response) {
+                       console.log('success')
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    }
+                })
+            })
+        });
+</script>
+
 {% endblock %}

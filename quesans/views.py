@@ -94,7 +94,12 @@ class QuestionAnswerView(DetailView):
         object = self.get_object()
         context = super().get_context_data(**kwargs)
         try:
+            lst = []
             context['answers'] = Answer.objects.all().filter(question=object)
+            for answer in Answer.objects.all().filter(question=object):
+                if answer.upvote.filter(id=self.request.user.id).exists():
+                    lst.append(answer)
+            context['lst'] = lst
             return context
         except:
             return None
@@ -117,7 +122,7 @@ def AnswerDetail(request, pk):
             # Save the comment to the database
             new_reply.save()
             # redirect to same page and focus on that comment
-            return HttpResponseRedirect(reverse('quesans:ans-detail',args=[str(pk)])+'#'+str(new_reply.id))
+            return HttpResponseRedirect(reverse('quesans:ans-detail', args=[str(pk)])+'#'+str(new_reply.id))
             # answer.get_absolute_url()+'#'+str(new_reply.id)
     else:
         reply_form = forms.PostReply()
@@ -170,7 +175,10 @@ class AnswerDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def UpvoteView(request, slug):
     answer = get_object_or_404(Answer, id=request.POST.get('answer_id'))
-    answer.upvote.add(request.user)
+    if answer.upvote.filter(id=request.user.id).exists():
+        answer.upvote.remove(request.user)
+    else:
+        answer.upvote.add(request.user)
     messages.success(request, "Answer upvoted")
     return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
