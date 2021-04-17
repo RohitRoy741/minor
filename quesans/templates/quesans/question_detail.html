@@ -53,9 +53,9 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-primary bt-sm mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}">
         {% if answer in lst %}
-        Upvoted
+        Upvoted <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% else %}
-        Upvote
+        Upvote <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% endif %}
         </button>
     </form>
