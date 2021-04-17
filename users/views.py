@@ -131,11 +131,11 @@ def follow(request, pk):
 
 
 def accept_follow_request(request, pk):
-    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
-    user = get_object_or_404(User, id=pk)
+    profile = request.user.profile
+    user = get_object_or_404(User, id=request.POST.get('user_id'))
+    print(user.pk)
     profile.following.add(user)
     profile.follow_request.remove(user)
-
     return HttpResponseRedirect(reverse('suggestions'))
 
 
