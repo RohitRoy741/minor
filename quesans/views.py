@@ -117,8 +117,7 @@ def AnswerDetail(request, pk):
             # Save the comment to the database
             new_reply.save()
             # redirect to same page and focus on that comment
-            url = '/quesans/answer/'+str(pk)+'/'+str(new_reply.id)
-            return HttpResponseRedirect(reverse(url))
+            return HttpResponseRedirect(reverse('quesans:ans-detail',args=[str(pk)])+'#'+str(new_reply.id))
             # answer.get_absolute_url()+'#'+str(new_reply.id)
     else:
         reply_form = forms.PostReply()

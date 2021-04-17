@@ -19,6 +19,11 @@
     <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
     <p class="article-content">{{ question.snippet }}</p>
     </div>
+    {% if question.answered %}
+    <span class="badge badge-danger">Closed</span>
+    {% else %}
+    <span class="badge badge-success">Open</span>
+    {% endif %}
 </article>
 <br>
 {% empty %}
