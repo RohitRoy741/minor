@@ -53,6 +53,14 @@
                 const trimCount = parseInt(likes)
                 const likeText = $(`.like-btn${post_id}`).find("i").hasClass("fas") ? "Liked":"Like"
                 trim = $.trim(likeText)
+                if(trim == 'Liked') {
+                    $(`.like-btn${post_id}`).html('<i class="far fa-heart" style="font-size:30px;color:red"></i>')
+                    res = trimCount - 1
+                } else {
+                    $(`.like-btn${post_id}`).html('<i class="fas fa-heart" style="font-size:30px;color:red"></i>')
+                    res = trimCount + 1
+                }
+                $(`.like-count${post_id}`).text(res+' likes')
                 $.ajax({
                     type: 'POST',
                     url: url,
@@ -61,14 +69,7 @@
                         'post_id': post_id,
                     },
                     success: function(response) {
-                        if(trim == 'Liked') {
-                            $(`.like-btn${post_id}`).html('<i class="far fa-heart" style="font-size:30px;color:red"></i>')
-                            res = trimCount - 1
-                        } else {
-                            $(`.like-btn${post_id}`).html('<i class="fas fa-heart" style="font-size:30px;color:red"></i>')
-                            res = trimCount + 1
-                        }
-                        $(`.like-count${post_id}`).text(res+' likes')
+                       console.log('success')
                     },
                     error: function(response) {
                         console.log('error', response)

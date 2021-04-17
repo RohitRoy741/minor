@@ -53,7 +53,21 @@
       const ftext = $(`.follow-btn${profile_id}`).text()
       //console.log(ftext)
       nftext = $.trim(ftext)
+      if(nftext=='Follow') {
+        $(`.follow-btn${profile_id}`).removeClass("btn-primary")
+        $(`.follow-btn${profile_id}`).addClass("btn-success")
+        $(`.follow-btn${profile_id}`).text('Requested')                    
+      } else if(nftext=='Requested') {
+        $(`.follow-btn${profile_id}`).removeClass("btn-success")
+        $(`.follow-btn${profile_id}`).addClass("btn-primary")
+        $(`.follow-btn${profile_id}`).text('Follow') 
+      } else {
+        $(`.follow-btn${profile_id}`).removeClass("btn-success")
+        $(`.follow-btn${profile_id}`).addClass("btn-primary")
+        $(`.follow-btn${profile_id}`).text('Follow') 
+      }
       $.ajax({
+
               type: 'POST',
               url: url,
               data: {
@@ -61,19 +75,7 @@
                   'profile_id': profile_id,
               },
               success: function(response) {
-                  if(nftext=='Follow') {
-                    $(`.follow-btn${profile_id}`).removeClass("btn-primary")
-                    $(`.follow-btn${profile_id}`).addClass("btn-success")
-                    $(`.follow-btn${profile_id}`).text('Requested')                    
-                  } else if(nftext=='Requested') {
-                    $(`.follow-btn${profile_id}`).removeClass("btn-success")
-                    $(`.follow-btn${profile_id}`).addClass("btn-primary")
-                    $(`.follow-btn${profile_id}`).text('Follow') 
-                  } else {
-                    $(`.follow-btn${profile_id}`).removeClass("btn-success")
-                    $(`.follow-btn${profile_id}`).addClass("btn-primary")
-                    $(`.follow-btn${profile_id}`).text('Follow') 
-                  }
+                  console.log('success')
               },
               error: function(response) {
                   console.log('error', response)
