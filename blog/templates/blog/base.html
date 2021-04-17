@@ -541,7 +541,7 @@
               <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ user.profile.branch }}, {{ user.profile.programme }}</p>
             </div>
             {% for request in user.profile.follow_request.all %}
-                  <div class="req-container">
+                  <div class="req-container req-id{{ request.pk }}">
                     <div class="req-meta">
                       <h6>Follow Request</h6>
                       <img src="{{ request.profile.image.url }}" height="150px" width="150px">
@@ -549,9 +549,9 @@
                       <small>@{{ request.username }}</small>
                     </div>
                     <div class="request-action">
-                      <form action="{% url 'accept-follow-request' request.pk %}" method="POST" class="mt-1">
+                      <form action="{% url 'accept-follow-request' request.pk %}" method="POST" class="mt-1 accept-form" id="{{ request.pk }}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary" name="profile_id" value="{{ user.profile.id }}">Accept</button>
+                        <button type="submit" class="btn btn-primary" name="user_id" value="{{ request.id }}">Accept</button>
                       </form>
                       <form class="mt-1">
                         <button type="submit" class="btn btn-danger">Reject</button>
@@ -601,7 +601,32 @@
         </div>
         {% endif %}
       </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script>
+        $(document).ready(function(){
+          $('.accept-form').submit(function(e){
+            e.preventDefault();
+            const url = $(this).attr('action');
+            const user_id = $(this).attr('id');
+            $(`.req-id${user_id}`).hide();
+            $.ajax({
+                  type: 'POST',
+                  url: url,
+                  data: {
+                      'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                      'user_id': user_id,
+                  },
+                  success: function(response) {
+                      console.log('success')
+                  },
+                  error: function(response) {
+                      console.log('error', response)
+                  }
+                  })
+
+          })
+        });
+      </script>
 </body>
 </html>
