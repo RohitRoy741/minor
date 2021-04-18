@@ -39,7 +39,7 @@
       {% if answer.is_anonymous %}
       <small class="text-muted">Anonymous</small>
       {% else %}
-      <a class="mr-3" href="{% url 'profile-page' question.author.id %}">{{answer.user.username}}</a>
+      <a class="mr-3" href="{% url 'profile-page' answer.user.id %}">{{answer.user.username}}</a>
       {% endif %}
       <small class="text-muted">{{answer.date}}</small>
     </div>
@@ -49,21 +49,27 @@
     <br>
     {% endif %}
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
-    
+
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
         {% csrf_token %}
         <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
-        {% if answer in lst %}
+        {% if answer in ulst %}
         <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% else %}
         <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
         {% endif %}
         </button>
     </form>
-    <p>Downvotes: {{answer.downvote.count}}</p>
-    <form action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;">
+    Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p>
+    <form class="downvote-form" action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;" id="{{answer.id}}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary bt-sm mt-1" name="answer_id" value="{{ answer.id }}">Downvote</button>
+        <button type="submit" class="btn mt-1 downvote-btn{{answer.id}}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
+        {% if answer in dlst %}
+        <i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>
+        {% else %}
+        <i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>
+        {% endif %}
+        </button>
     </form>
     {% if answer.user == user %}
     <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
@@ -72,6 +78,7 @@
 </article>
 <a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Replies</a>
 {% endfor %}
+<br>
 {% if not question.answered %}
 <a href="{% url 'quesans:postans' question.pk %}" class='btn btn-info' role='button'>Add an answer</a>
 {% endif %}
@@ -93,7 +100,7 @@
                 trim = $.trim(upvoteText)
                 //console.log(trim)
                 if(trim == 'Upvoted') {
-                   $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>") 
+                   $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
                    res = trimCount - 1
                  } else {
                     $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
@@ -114,7 +121,42 @@
                         console.log('error', response)
                     }
                 })
+            });
+          $('.downvote-form').submit(function(e){
+            e.preventDefault()
+            const answer_id = $(this).attr('id')
+            const url = $(this).attr('action')
+            let res
+            const downvotes = $(`.downvote-count${answer_id}`).text()
+            const trimCount = parseInt(downvotes)
+            //console.log(trimCount)
+            const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+            //console.log(upvoteText)
+            trim = $.trim(downvoteText)
+            //console.log(trim)
+            if(trim == 'Downvoted') {
+               $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
+               res = trimCount - 1
+             } else {
+                $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
+                res = trimCount + 1
+            }
+             $(`.downvote-count${answer_id}`).text(res)
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'answer_id': answer_id,
+                },
+                success: function(response) {
+                   console.log('success')
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
             })
+          })
         });
 </script>
 

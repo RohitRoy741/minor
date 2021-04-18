@@ -23,7 +23,7 @@ class Question(models.Model):
         return self.desc[:25]+"..."
 
     def get_absolute_url(self):
-        return reverse('quesans:qlist')
+        return reverse('quesans:qthread',kwargs={'slug':self.slug})
 
 
 class Answer(models.Model):
@@ -44,7 +44,7 @@ class Answer(models.Model):
         return reverse('quesans:qthread',kwargs={'slug':self.question.slug})
 
     def get_replies(self):
-        return self.replies.filter(parent=None).filter(active=True)   
+        return self.replies.filter(parent=None).filter(active=True)
 
 class Reply(models.Model):
     answer=models.ForeignKey(Answer,on_delete=models.CASCADE, related_name="replies")

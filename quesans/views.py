@@ -38,7 +38,7 @@ class SearchView(ListView):
         result = super(SearchView, self).get_queryset()
         query = self.request.GET.get('search')
         if query:
-            postresult = Question.objects.filter(title__contains=query).order_by('answered','-created_on')
+            postresult = Question.objects.filter(title__contains=query).order_by('-answered','-created_on')
             result = postresult
         else:
             result = None
@@ -78,7 +78,7 @@ class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().get_login_url()
 
     def get_absolute_url(self):
-        return reverse('quesans:qlist')
+        return reverse('quesans:qthread', args=[str(self.question.slug)])
 
 
 class QuestionAnswerView(DetailView):
@@ -94,12 +94,16 @@ class QuestionAnswerView(DetailView):
         object = self.get_object()
         context = super().get_context_data(**kwargs)
         try:
-            lst = []
+            ulst = []
+            dlst = []
             context['answers'] = Answer.objects.all().filter(question=object)
             for answer in Answer.objects.all().filter(question=object):
                 if answer.upvote.filter(id=self.request.user.id).exists():
                     lst.append(answer)
-            context['lst'] = lst
+                if answer.downvote.filter(id=self.request.user.id).exists():
+                    dlst.append(answer)
+            context['ulst'] = ulst
+            context['dlst'] = dlst
             return context
         except:
             return None
@@ -180,7 +184,7 @@ def UpvoteView(request, slug):
     else:
         answer.upvote.add(request.user)
     messages.success(request, "Answer upvoted")
-    return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
+    #return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 
 def DownvoteView(request, slug):
@@ -190,12 +194,13 @@ def DownvoteView(request, slug):
     # if so then remove upvote and notify user to downvote
     if request.user in upvotes:
         answer.upvote.remove(request.user)
-        messages.success(
-            request, "Upvote removed! Select downvote button to downvote")
+        #messages.success(request, "Upvote removed! Select downvote button to downvote")
+    elif answer.downvote.filter(id=request.user.id).exists():
+        answer.downvote.remove(request.user)
     else:
         answer.downvote.add(request.user)
-        messages.success(request, "Answer downvoted")
-    return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
+        #messages.success(request, "Answer downvoted")
+    #return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 
 def QuestionAnswered(request, slug):
