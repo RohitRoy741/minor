@@ -131,11 +131,11 @@ def follow(request, pk):
 
 
 def accept_follow_request(request, pk):
-    profile = get_object_or_404(Profile, id=request.POST.get('profile_id'))
-    user = get_object_or_404(User, id=pk)
+    profile = request.user.profile
+    user = get_object_or_404(User, id=request.POST.get('user_id'))
+    print(user.pk)
     profile.following.add(user)
     profile.follow_request.remove(user)
-
     return HttpResponseRedirect(reverse('suggestions'))
 
 
@@ -155,6 +155,97 @@ class ProfileListView(LoginRequiredMixin, ListView):
         context['lst'] = lst
         context['request_lst'] = request_lst
         return context
+
+
+class vertex():
+    def __init__(self, profile, index):
+        self.profile = profile
+        self.color = 'WHITE'
+        self.parent = None
+        self.distance = 20000
+        self.index = index
+
+
+class profileGraph():
+    def __init__(self, lst):
+        self.V = list()
+        i = 0
+        for profile in lst:
+            v = vertex(profile, i)
+            i = i+1
+            self.V.append(v)
+        self.AdjList = list()
+        for v1 in self.V:
+            lst = list()
+            for v2 in self.V:
+                if v1.profile.user.following.filter(id=v2.profile.id).exists():
+                    lst.append(v2)
+            self.AdjList.append(lst)
+
+    def profiles_data(self):
+        for v in self.V:
+            print(v.profile.user.id)
+
+
+def bfs(g, source, temp):
+    g.V[source].distance = 0
+    g.V[source].color = 'GRAY'
+    queue = list()
+    queue.append(g.V[source])
+    while len(queue) > 0:
+        u = queue.pop(0)
+        for v in g.AdjList[u.index]:
+            if v.color == 'WHITE':
+                v.color = 'GRAY'
+                v.parent = u
+                v.distance = u.distance + 1
+                queue.append(v)
+        u.color = 'BLACK'
+        temp.append(u)
+
+
+def findFriend(request):
+    profiles = Profile.objects.all()
+    g = profileGraph(profiles)
+    g.profiles_data()
+    place = None
+    x = request.user.profile.id
+    for i in range(len(g.V)):
+        if g.V[i].profile.id == x:
+            place = i
+            break
+    print(place)
+    for lst in g.AdjList:
+        for v in lst:
+            print(v.profile.user.id, end=' ')
+        print()
+    temp = list()
+    bfs(g, place, temp)
+    for v in g.V:
+        print(v.profile.user.username, v.distance)
+    result = list()
+    lst = list()
+    request_lst = list()
+    for vertex in temp:
+        if vertex.parent is None:
+            pass
+        else:
+            if vertex.distance <= 1:
+                lst.append(vertex.profile.id)
+            elif vertex.profile.follow_request.filter(id=request.user.id).exists():
+                request_lst.append(vertex.profile.id)
+            else:
+                result.append(vertex.profile)
+            print(vertex.profile.user.username,
+                  vertex.parent.profile.user.username, vertex.distance)
+    context = {
+        't': result,
+        'lst': lst,
+        'request_lst': request_lst
+    }
+    for profile in result:
+        print(profile.user.username)
+    return render(request, 'users/findFriends.html', context)
 
 
 class ProfileDetailView(DetailView):
