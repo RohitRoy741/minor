@@ -40,6 +40,8 @@ urlpatterns = [
     #      user_views.follow_request, name='follow-request'),
     path('accept_request/<int:pk>',
          user_views.accept_follow_request, name='accept-follow-request'),
+    path('find_friends/',
+         user_views.findFriend, name='find-friend'),
     path('suggestions/', user_views.ProfileListView.as_view(
         template_name='users/suggestions.html'), name='suggestions'),
 ]

@@ -540,6 +540,7 @@
               <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  user.profile.city }}, {{ user.profile.state }}</p>
               <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ user.profile.branch }}, {{ user.profile.programme }}</p>
             </div>
+            <button class="btn btn-success mt-1 ml-1"><a href="{% url 'find-friend' %}" style="text-decoration: none; color: azure;">Find Some Friends</a></button>
             {% for request in user.profile.follow_request.all %}
                   <div class="req-container req-id{{ request.pk }}">
                     <div class="req-meta">
