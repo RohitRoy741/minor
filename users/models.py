@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_cryptography.fields import encrypt
 from PIL import Image
 from django.conf import settings
 from django.utils import timezone
@@ -14,7 +15,8 @@ class Profile(models.Model):
     programme = models.CharField(default='B.Tech', max_length=15)
     branch = models.CharField(default='CSE', max_length=15)
     face = models.ImageField(blank=True, upload_to='faces')
-    face_encode = models.FileField(upload_to='face_encodes', blank=True)
+    #face_encode = models.FileField(upload_to='face_encodes', blank=True)
+    face_encode = encrypt(models.TextField(blank=True))
     two_factor = models.BooleanField(default=False)
     following = models.ManyToManyField(
         User, related_name='following')
