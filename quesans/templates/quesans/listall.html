@@ -1,16 +1,21 @@
 {% extends 'quesans/base_layout.html' %}
 {% block content %}
-<h3 class="display-4">Question/Answer Forum</h3>
+<!-- <h3 class="display-4">Question/Answer Forum</h3> -->
     {% for question in questions %}
     <article class="media content-section">
-        <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+        <div style="display: flex; flex-direction: column;">
+            <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+            <i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;"></i>
+            <h5 style="margin-left: 3px;">33</h5>
+            <i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px;"></i>
+        </div>
         <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'profile-page' question.author.id %}">{{question.author}}</a>
             <small class="text-muted">{{question.created_on}}</small>
         </div>
-        <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
-        <p class="article-content">{{ question.snippet }}</p>
+        <p><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></p>
+        <p class="question-description">{{ question.snippet }}</p>
         </div>
         {% if question.answered %}
         <span class="badge badge-danger">Closed</span>

@@ -12,31 +12,150 @@
     <script src="https://kit.fontawesome.com/856ad3f830.js" crossorigin="anonymous"></script>
     <script src="{% static 'quesans/main.js'%}"></script>
     <title>Question-Answer Forum</title>
+    <style>
+      .dark{
+        background-color: black;
+        color: white;
+      }
+      .navigation-search-container {
+		  position: relative;
+		}
+      .navigation-search-container .fa-search {
+		  position: absolute;
+		  top: 10px;
+		  left: 10px;
+		  font-size: 11px;
+		  color: rgba(77, 75, 75, 0.856);
+		}
+    .navigation-search-container input {
+		  background-color: #fcf7f7;
+		  padding: 3px 20px;
+		  padding-left: 25px;
+		  height: 30px;
+      width: 450px;
+		  box-sizing: border-box;
+		  border: 1px solid rgba(235, 225, 225, 0.098);
+		  border-radius: 30px;
+		  font-size: 14px;
+      color: rgb(80, 76, 76);
+		}
+    .content-section{
+      margin-top: 0;
+      margin-bottom: 1px;
+    }
+    .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+      position: relative;
+      width: 100%;
+      padding-right: 2px;
+      padding-left: 2px;
+    }
+    .container-fluid {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .article-img{
+      height: 2.5rem;
+      width: 2.5rem;
+      margin-top: 0.3rem;
+    }
+    .article-title{
+      font-size: 16px;
+      font-weight: 500;
+      color: black;
+    }
+    .question-description {
+      font-family: sans-serif;
+      color: rgb(114, 108, 108);
+      font-size: 15px;
+    }
+    .side-para {
+      font-weight: 500;
+      margin-left: 6px;
+      display: inline-block;
+    }
+    .buttone {
+      display: block;
+      padding: 5px 10px;
+      color: whitesmoke;
+      background-color: rgb(95, 95, 175);
+      text-align: center;
+      border: rgb(99, 90, 90) 1px solid;
+      text-decoration: none;
+    }
+    .buttone:hover {
+      background-color: cadetblue;
+      text-decoration: none;
+      color: whitesmoke;
+    }
+    .stats {
+      display: flex;
+      flex-direction: row;
+      margin-left: 35px;
+      padding: 15px;
+    }
+    .stat {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+      padding: 2px 5px;
+      margin-right: 15px;
+      background-color: white;
+      width: 47%;
+      border: 1px solid #dddddd;
+    }
+    .stat-number{
+      margin-bottom: 1px;
+      font-size: 24px;
+      font-weight: 500;
+    }
+    .stat-head{
+      margin-bottom: 1px;
+    }
+    .xavier {
+      display: flex;
+      flex-direction: row;
+    }
+    @media only screen and (min-width: 320px) and (max-width: 650px) {
+      .web {
+        display: none;
+      }
+    }
+    </style>
+
   </head>
   <body>
     <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <nav class="navbar navbar-expand-md navbar-dark dark fixed-top">
             <div class="container">
-            <a class="navbar-brand mr-4" href="{% url 'quesans:clist' %}">Q&A</a>
+            <a class="navbar-brand mr-4" href="{% url 'quesans:clist' %}">QUERY</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{% url 'blog-home' %}">Blogs</a>
-                <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'blog-home' %}" style="color: whitesmoke;">Blogs</a>
+                <a class="nav-item nav-link" href="{% url 'blog-about' %}" style="color: whitesmoke;">About</a>
+                <form method="GET" action="{% url 'search' %}" class="mt-1 ml-2">
+                  <div class="navigation-search-container">
+                    <i class="fa fa-search"></i>
+                    <input class="search-field" type="search" name="search" placeholder="Search">
+                    <div class="search-container">
+                      <div class="search-container-box">
+                      </div>
+                    </div>
+                  </div>
+                </form>
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                   {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{% url 'quesans:postq' %}">Ask a question</a>
-                    <a class='nav-item nav-link' href="{% url 'quesans:qlist' %}">Your questions</a>
-                    <a class='nav-item nav-link' href="{% url 'quesans:qsearch' %}">Search</a>
-                    <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
-                    <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                    <a class='nav-item nav-link' href="{% url 'quesans:qlist' %}" style="color: whitesmoke;">Your questions</a>
+                    <a class='nav-item nav-link' href="{% url 'quesans:qsearch' %}" style="color: whitesmoke;">Search</a>
+                    <a class="nav-item nav-link" href="{% url 'profile' %}" style="color: whitesmoke;">Profile</a>
+                    <a class="nav-item nav-link" href="{% url 'logout' %}" style="color: whitesmoke;">Logout</a>
                   {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}" style="color: whitesmoke;">Login</a>
+                    <a class="nav-item nav-link" href="{% url 'register' %}" style="color: whitesmoke;">Register</a>
                   {% endif %}
                 </div>
             </div>
@@ -45,7 +164,33 @@
     </header>
     <main role="main" class="container">
         <div class="row">
-          <div class="col-md-8" style="margin-top: 0;">
+          <div class="col-md-3 web xavier">
+            <div>
+              <p>
+              <i class="fas fa-home" style="color: #0c0c0c; margin-top: 50px; font-size: 20px;"></i>
+              </p>
+              <p>
+              <i  class="far fa-user-circle" style="color: #0c0c0c; font-size: 20px;"></i>
+              </p>
+              <p>
+              <i class="fas fa-user-plus" style="color: #0c0c0c; font-size: 20px;"></i>
+              </p>
+              <p>
+              <i  class="fas fa-plus-square" style="color: #0c0c0c; font-size: 20px;"></i>
+              </p>
+              <p>
+              <i class="fas fa-bell" style="color: #0c0c0c; font-size: 20px;"></i>
+              </p>
+            </div>
+            <div style="display: inline-block; margin-left: 10px;">
+              <p style="margin-top: 50px;">Home</p>
+              <p>Profile</p>
+              <p>Find Friend</p>
+              <p>Add Post</p>
+              <p>Notifications</p>
+            </div>
+          </div>
+          <div class="col-md-6" style="margin-top: 10px;">
             {% if messages %}
               {% for message in messages %}
               <div class="container-fluid p-0">
@@ -62,17 +207,17 @@
               {% block content %}{% endblock %}
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
-                <ul class="list-group">
-                  <li class="list-group-item list-group-item-light">Latest Posts</li>
-                  <li class="list-group-item list-group-item-light">Announcements</li>
-                  <li class="list-group-item list-group-item-light">Calendars</li>
-                  <li class="list-group-item list-group-item-light">etc</li>
-                </ul>
-              </p>
+          <div class="col-md-3 web" style="margin-top: 30px;">
+            <a class="buttone" href="{% url 'quesans:postq' %}" style="margin-left: 20px;">Ask a question</a>
+            <div class="stats">
+              <div class="stat" style="border-left: 3px solid red;">
+                <p class="stat-head" style="color: red;">Questions</p>
+                <p class="stat-number">976</p>
+              </div>
+              <div class="stat" style="border-right: 3px solid blue;">
+                <p class="stat-head" style="color: blue;">Answers</p>
+                <p class="stat-number">736</p>
+              </div>
             </div>
           </div>
         </div>
