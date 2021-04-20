@@ -1,13 +1,32 @@
 {% extends 'quesans/base_layout.html' %}
+{% load mathfilters %}
 {% block content %}
-<!-- <h3 class="display-4">Question/Answer Forum</h3> -->
+<!-- <h3 class="display-4">Question/question Forum</h3> -->
     {% for question in questions %}
     <article class="media content-section">
         <div style="display: flex; flex-direction: column;">
             <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
-            <i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;"></i>
-            <h5 style="margin-left: 3px;">33</h5>
-            <i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px;"></i>
+            <form action="{% url 'quesans:ques-voteup' %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ question.id }}">
+                {% csrf_token %}
+                <button type="submit" class="btn mt-1 upvote-btn{{ question.id }}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+                {% if question in uplst %}
+                <i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>
+                {% else %}
+                <i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>
+                {% endif %}
+                </button>
+            </form>
+            <h5 class="vote-count{{question.id}}" style="margin-left: 18px;">{{question.qupvote.count|sub:question.qdownvote.count}}</h5>
+            <form class="downvote-form" action="{% url 'quesans:ques-votedown' %}" method="POST" style="display: inline-block;" id="{{question.id}}">
+                {% csrf_token %}
+                <button type="submit" class="btn mt-1 downvote-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+                {% if question in downlst %}
+                <i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px;color:black"></i>
+                {% else %}
+                <i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px;color:grey"></i>
+                {% endif %}
+                </button>
+            </form>
         </div>
         <div class="media-body">
         <div class="article-metadata">
@@ -24,4 +43,81 @@
         {% endif %}
     </article>
     {% endfor %}
+{% endblock %}
+{% block script %}
+<script>
+       $(document).ready(function(){
+            $('.upvote-form').submit(function(e){
+                e.preventDefault()
+                //console.log('success')
+                const question_id = $(this).attr('id')
+                const url = $(this).attr('action')
+                let res;
+                const votes = $(`.vote-count${question_id}`).text()
+                const trimCount = parseInt(votes)
+                //console.log(trimCount)
+                const upvoteText = $(`.upvote-btn${question_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
+                //console.log(upvoteText)
+                trim = $.trim(upvoteText)
+                //console.log(trim)
+                if(trim == 'Upvoted') {
+                   $(`.upvote-btn${question_id}`).html("<i class=\"fas fa-caret-up\" style=\"font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey\"></i>")
+                   res = trimCount - 1
+                 } else {
+                    $(`.upvote-btn${question_id}`).html("<i class=\"fas fa-caret-up\" style=\"font-size: 28px; margin-left: 5px; margin-top: 10px;color:black\"></i>")
+                    res = trimCount + 1
+                }
+                 $(`.vote-count${question_id}`).text(res)
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'question_id': question_id,
+                    },
+                    success: function(response) {
+                       console.log('success')
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    }
+                })
+            });
+          $('.downvote-form').submit(function(e){
+            e.preventDefault()
+            const question_id = $(this).attr('id')
+            const url = $(this).attr('action')
+            let res
+            const votes = $(`.vote-count${question_id}`).text()
+            const trimCount = parseInt(votes)
+            //console.log(trimCount)
+            const downvoteText = $(`.downvote-btn${question_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+            //console.log(upvoteText)
+            trim = $.trim(downvoteText)
+            //console.log(trim)
+            if(trim == 'Downvoted') {
+               $(`.downvote-btn${question_id}`).html("<i class=\"fas fa-caret-down\" style=\"font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey\"></i>")
+               res = trimCount + 1
+             } else {
+                $(`.downvote-btn${question_id}`).html("<i class=\"fas fa-caret-down\" style=\"font-size: 28px; margin-left: 5px; margin-top: 10px;color:black\"></i>")
+                res = trimCount - 1
+            }
+             $(`.vote-count${question_id}`).text(res)
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'question_id': question_id,
+                },
+                success: function(response) {
+                   console.log('success')
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+            })
+          })
+        });
+</script>
 {% endblock %}

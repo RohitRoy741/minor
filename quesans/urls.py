@@ -4,11 +4,13 @@ from . import views
 app_name='quesans'
 
 urlpatterns = [
-    path('list/',views.YourQuestionListView.as_view(),name='qlist'),
+    path('your-list/',views.YourQuestionListView.as_view(),name='qlist'),
     path('',views.QuestionListView.as_view(),name='clist'),
     path('postanswer/<int:pk>/new/',views.AnswerPostView.as_view(),name='postans'),
     path('post/new/',views.PostQuestionView.as_view(),name='postq'),
     path('searchquestion/',views.SearchView.as_view(),name='qsearch'),
+    path('voteup/',views.QuesVoteup,name='ques-voteup'),
+    path('votedown/',views.QuesVotedown,name='ques-votedown'),
     path('<slug:slug>/',views.QuestionAnswerView.as_view(),name='qthread'),
     path('answer/<int:pk>/',views.AnswerDetail,name='ans-detail'),
     path('answer/reply/', views.reply_page, name="reply"),

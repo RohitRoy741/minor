@@ -34,7 +34,7 @@ urlpatterns = [
     path('profile/webcam', user_views.webcam, name='webcam'),
     path('profile/headshot', user_views.postHeadShot, name='postheadshot'),
     path('', include('blog.urls')),
-    path('quesans/', include('quesans.urls')),
+    path('Query/', include('quesans.urls')),
     path('follow/<int:pk>', user_views.follow, name='follow'),
     # path('follow_request/<int:pk>',
     #      user_views.follow_request, name='follow-request'),

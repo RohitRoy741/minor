@@ -17,6 +17,22 @@ class QuestionListView(ListView):
     context_object_name = 'questions'
     ordering = ['answered','-created_on']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            uplst = []
+            downlst = []
+            for question in Question.objects.all():
+                if question.qupvote.filter(id=self.request.user.id).exists():
+                    uplst.append(question)
+                if question.qdownvote.filter(id=self.request.user.id).exists():
+                    downlst.append(question)
+            context['uplst'] = uplst
+            context['downlst'] = downlst
+            return context
+        except:
+            return None
+
 
 class YourQuestionListView(LoginRequiredMixin, ListView):
     model = Question
@@ -201,6 +217,18 @@ def DownvoteView(request, slug):
         answer.downvote.add(request.user)
         #messages.success(request, "Answer downvoted")
     #return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
+
+def QuesVoteup(request):
+    question = get_object_or_404(Question,id=request.POST.get('question_id'))
+    if question.qupvote.filter(id=request.user.id).exists():
+        question.qupvote.remove(request.user)
+    else: question.qupvote.add(request.user)
+
+def QuesVotedown(request):
+    question = get_object_or_404(Question,id=request.POST.get('question_id'))
+    if question.qdownvote.filter(id=request.user.id).exists():
+        question.qdownvote.remove(request.user)
+    else: question.qdownvote.add(request.user)
 
 
 def QuestionAnswered(request, slug):

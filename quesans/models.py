@@ -9,6 +9,9 @@ class Question(models.Model):
     author=models.ForeignKey(User,on_delete=models.CASCADE,default=None)
     created_on = models.DateTimeField(auto_now=True)
     image = models.ImageField(null=True,blank=True,upload_to ='ques_images/')
+    qupvote = models.ManyToManyField(User,related_name = 'q_upvote')
+    qdownvote = models.ManyToManyField(User,related_name = 'q_downvote')
+    bookmarked = models.BooleanField(default=False)
     answered = models.BooleanField(default=False)
     slug=models.SlugField()
 
