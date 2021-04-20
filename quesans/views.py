@@ -63,7 +63,7 @@ class SearchView(ListView):
 
 class PostQuestionView(LoginRequiredMixin, CreateView):
     model = Question
-    fields = ['title', 'desc']
+    fields = ['title', 'desc','image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
