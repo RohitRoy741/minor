@@ -36,7 +36,7 @@ class QuestionListView(ListView):
 
 class YourQuestionListView(LoginRequiredMixin, ListView):
     model = Question
-    template_name = 'quesans/listall.html'
+    template_name = 'quesans/qlist.html'
     context_object_name = 'questions'
     ordering = ['answered','-created_on']
 
