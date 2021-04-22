@@ -36,7 +36,7 @@ class QuestionListView(ListView):
 
 class YourQuestionListView(LoginRequiredMixin, ListView):
     model = Question
-    template_name = 'quesans/listall.html'
+    template_name = 'quesans/qlist.html'
     context_object_name = 'questions'
     ordering = ['answered','-created_on']
 
@@ -63,7 +63,7 @@ class SearchView(ListView):
 
 class PostQuestionView(LoginRequiredMixin, CreateView):
     model = Question
-    fields = ['title', 'desc']
+    fields = ['title', 'desc','image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -200,7 +200,7 @@ def UpvoteView(request, slug):
     else:
         answer.upvote.add(request.user)
     messages.success(request, "Answer upvoted")
-    #return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
+    return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 
 def DownvoteView(request, slug):
@@ -216,19 +216,29 @@ def DownvoteView(request, slug):
     else:
         answer.downvote.add(request.user)
         #messages.success(request, "Answer downvoted")
-    #return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
+    return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 def QuesVoteup(request):
     question = get_object_or_404(Question,id=request.POST.get('question_id'))
     if question.qupvote.filter(id=request.user.id).exists():
         question.qupvote.remove(request.user)
+    elif question.qdownvote.filter(id=request.user.id).exists():
+        question.qdownvote.remove(request.user)
+        question.qupvote.add(request.user)
     else: question.qupvote.add(request.user)
+    #return JsonResponse(data, safe=False)
+    return HttpResponseRedirect(reverse('quesans:qlist'))
 
 def QuesVotedown(request):
     question = get_object_or_404(Question,id=request.POST.get('question_id'))
     if question.qdownvote.filter(id=request.user.id).exists():
         question.qdownvote.remove(request.user)
+    elif question.qupvote.filter(id=request.user.id).exists():
+        question.qupvote.remove(request.user)
+        question.qdownvote.add(request.user)
     else: question.qdownvote.add(request.user)
+    #return JsonResponse(data, safe=False)
+    return HttpResponseRedirect(reverse("quesans:qlist"))
 
 
 def QuestionAnswered(request, slug):
