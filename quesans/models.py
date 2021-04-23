@@ -7,13 +7,11 @@ from tinymce import HTMLField
 class Question(models.Model):
     title = models.CharField(max_length=100)
     desc = HTMLField('desc')
-    #models.TextField()
     author=models.ForeignKey(User,on_delete=models.CASCADE,default=None)
     created_on = models.DateTimeField(auto_now=True)
-    #image = models.ImageField(null=True,blank=True,upload_to ='ques_images/')
     qupvote = models.ManyToManyField(User,related_name = 'q_upvote')
     qdownvote = models.ManyToManyField(User,related_name = 'q_downvote')
-    bookmarked = models.BooleanField(default=False)
+    bookmarked = models.ManyToManyField(User,related_name = 'bookmarked')
     answered = models.BooleanField(default=False)
     slug=models.SlugField()
 
@@ -35,12 +33,10 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_text = HTMLField('content')
-    #models.TextField()
     date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
     upvote = models.ManyToManyField(User,related_name = 'upvote')
     downvote = models.ManyToManyField(User,related_name = 'downvote')
-    #image = models.ImageField(null=True,blank=True,upload_to ='ans_images/')
 
     def __str__(self):
         return self.question.title+'-'+self.user.username

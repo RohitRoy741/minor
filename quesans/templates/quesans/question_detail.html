@@ -9,12 +9,8 @@
     </div>
     <h2>{{ question.title }}</h2>
     <p class="article-content">{{ question.desc }}</p>
-    {% if question.image %}
-    <img class="img-fluid mx-auto d-block" src="{{ question.image.url }}">
-    <br>
-    {% endif %}
     {% if question.author == user %}
-    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn btn-info' role='button'>Edit</a>
+    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
     {% endif %}
     </div>
     {% if question.answered %}
@@ -44,10 +40,6 @@
       <small class="text-muted">{{answer.date}}</small>
     </div>
     <p class="article-content">{{answer.answer_text}}</p>
-    {% if answer.image %}
-    <img class="img-fluid mx-auto d-block" src="{{ answer.image.url }}">
-    <br>
-    {% endif %}
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
 
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
@@ -72,15 +64,15 @@
         </button>
     </form>
     {% if answer.user == user %}
-    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
+    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
     {% endif %}
   </div>
 </article>
-<a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Replies</a>
+<a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Thread</a>
 {% endfor %}
 <br>
 {% if not question.answered %}
-<a href="{% url 'quesans:postans' question.pk %}" class='btn btn-info' role='button'>Add an answer</a>
+<a href="{% url 'quesans:postans' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-pen' style='font-size:24px;color:green'></i></a>
 {% endif %}
 {% endblock %}
 {% block script %}
