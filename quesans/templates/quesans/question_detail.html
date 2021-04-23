@@ -8,7 +8,7 @@
         <small class="text-muted">{{question.created_on}}</small>
     </div>
     <h2>{{ question.title }}</h2>
-    <p class="article-content">{{ question.desc }}</p>
+    <p class="article-content">{{ question.desc|safe}}</p>
     {% if question.author == user %}
     <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
     {% endif %}
