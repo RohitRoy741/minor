@@ -44,6 +44,22 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
         questions = Question.objects.all().filter(author=self.request.user)
         return questions
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            uplst = []
+            downlst = []
+            for question in Question.objects.all().filter(author=self.request.user):
+                if question.qupvote.filter(id=self.request.user.id).exists():
+                    uplst.append(question)
+                if question.qdownvote.filter(id=self.request.user.id).exists():
+                    downlst.append(question)
+            context['uplst'] = uplst
+            context['downlst'] = downlst
+            return context
+        except:
+            return None
+
 
 class SearchView(ListView):
     model = Question
