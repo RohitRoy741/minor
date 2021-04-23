@@ -12,10 +12,6 @@
       <small class="text-muted">{{answer.date}}</small>
     </div>
     <p class="article-content">{{answer.answer_text}}</p>
-    {% if answer.image %}
-    <img class="img-fluid mx-auto d-block" src="{{ answer.image.url }}">
-    <br>
-    {% endif %}
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
 
     <form action="{% url 'quesans:upvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">

@@ -11,7 +11,7 @@ class Question(models.Model):
     created_on = models.DateTimeField(auto_now=True)
     qupvote = models.ManyToManyField(User,related_name = 'q_upvote')
     qdownvote = models.ManyToManyField(User,related_name = 'q_downvote')
-    bookmarked = models.BooleanField(default=False)
+    bookmarked = models.ManyToManyField(User,related_name = 'bookmarked')
     answered = models.BooleanField(default=False)
     slug=models.SlugField()
 
