@@ -63,7 +63,7 @@ class SearchView(ListView):
 
 class PostQuestionView(LoginRequiredMixin, CreateView):
     model = Question
-    fields = ['title', 'desc','image']
+    fields = ['title', 'desc']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -73,7 +73,7 @@ class PostQuestionView(LoginRequiredMixin, CreateView):
 
 class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Question
-    fields = ['title', 'desc', 'image', 'answered']
+    fields = ['title', 'desc','answered']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -167,7 +167,7 @@ def reply_page(request):
 
 class AnswerPostView(LoginRequiredMixin, CreateView):
     model = Answer
-    fields = ['answer_text', 'image']
+    fields = ['answer_text']
 
     def get_context_data(self, **kwargs):
         kwargs['question'] = Question.objects.get(pk=self.kwargs.get('pk'))

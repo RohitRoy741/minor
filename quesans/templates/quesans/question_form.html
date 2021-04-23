@@ -1,6 +1,7 @@
 {% extends 'quesans/base_layout.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+{{form.media}}
   <div class="content-section">
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}

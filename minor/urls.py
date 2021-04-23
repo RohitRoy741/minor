@@ -44,6 +44,7 @@ urlpatterns = [
          user_views.findFriend, name='find-friend'),
     path('suggestions/', user_views.ProfileListView.as_view(
         template_name='users/suggestions.html'), name='suggestions'),
+    path('tinymce/', include('tinymce.urls')),    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
