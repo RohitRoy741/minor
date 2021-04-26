@@ -22,13 +22,17 @@ class QuestionListView(ListView):
         try:
             uplst = []
             downlst = []
+            booklst = []
             for question in Question.objects.all():
                 if question.qupvote.filter(id=self.request.user.id).exists():
                     uplst.append(question)
                 if question.qdownvote.filter(id=self.request.user.id).exists():
                     downlst.append(question)
+                if question.bookmarked.filter(id=self.request.user.id).exists():
+                    booklst.append(question)
             context['uplst'] = uplst
             context['downlst'] = downlst
+            context['booklst']= booklst
             return context
         except:
             return None
@@ -256,6 +260,12 @@ def QuesVotedown(request):
     #return JsonResponse(data, safe=False)
     return HttpResponseRedirect(reverse("quesans:qlist"))
 
+def BookmarkView(request,slug):
+    question = get_object_or_404(Question,id=request.POST.get('question_id'))
+    if question.bookmarked.filter(id=request.user.id).exists():
+        question.bookmarked.remove(request.user)
+    else: question.bookmarked.add(request.user)
+    return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 def QuestionAnswered(request, slug):
     question = get_object_or_404(Question, id=request.POST.get('question_id'))

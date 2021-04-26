@@ -15,6 +15,7 @@ urlpatterns = [
     path('answer/<int:pk>/',views.AnswerDetail,name='ans-detail'),
     path('answer/reply/', views.reply_page, name="reply"),
     path('Answered/<slug:slug>/',views.QuestionAnswered,name='ques-flag'),
+    path('Bookmark/<slug:slug>/',views.BookmarkView,name='ques-bookmark'),
     path('upvote/<slug:slug>/',views.UpvoteView,name='upvote-ans'),
     path('downvote/<slug:slug>/',views.DownvoteView,name='downvote-ans'),
     path('post/<int:pk>/update/',views.QuestionUpdateView.as_view(),name='qupdate'),
