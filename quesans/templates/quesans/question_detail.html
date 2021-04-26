@@ -8,7 +8,7 @@
         <small class="text-muted">{{question.created_on}}</small>
     </div>
     <h2>{{ question.title }}</h2>
-    <p class="article-content">{{ question.desc|safe}}</p>
+    <p class="article">{{ question.desc|safe}}</p>
     {% if question.author == user %}
     <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
     {% endif %}
@@ -39,7 +39,7 @@
       {% endif %}
       <small class="text-muted">{{answer.date}}</small>
     </div>
-    <p class="article-content">{{answer.answer_text}}</p>
+    <p class="article-content">{{answer.answer_text|safe}}</p>
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
 
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">

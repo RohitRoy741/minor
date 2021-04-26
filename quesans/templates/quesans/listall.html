@@ -34,7 +34,7 @@
             <small class="text-muted">{{question.created_on}}</small>
         </div>
         <p><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></p>
-        <p class="question-description">{{ question.snippet }}</p>
+        <p class="question-description">{{ question.snippet|safe }}</p>
         </div>
         {% if question.answered %}
         <span class="badge badge-danger">Closed</span>

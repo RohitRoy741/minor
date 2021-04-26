@@ -9,7 +9,7 @@
             <small class="text-muted">{{question.created_on}}</small>
         </div>
         <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
-        <p class="article-content">{{ question.snippet }}</p>
+        <p class="article-content">{{ question.snippet|safe }}</p>
         {% if question.answered %}
         <span class="badge badge-danger">Closed</span>
         {% else %}

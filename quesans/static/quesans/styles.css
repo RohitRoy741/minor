@@ -51,6 +51,15 @@ a.article-title:hover {
   font-family:'Lucida Handwriting',cursive;
 }
 
+img{
+  border-style: hidden;
+  margin-right:auto;
+  margin-left:auto;
+  display:block;
+  height:auto;
+  max-width:100%;
+}
+
 .article-metadata {
   padding-bottom: 5px;
   padding:5px 10px;

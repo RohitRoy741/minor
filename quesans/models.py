@@ -23,7 +23,7 @@ class Question(models.Model):
         return self.title
 
     def snippet(self):
-        return self.desc[:25]+"..."
+        return self.desc[:25]+"...<p>"
 
     def get_absolute_url(self):
         return reverse('quesans:qthread',kwargs={'slug':self.slug})
