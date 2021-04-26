@@ -36,6 +36,16 @@
         <p><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></p>
         <p class="question-description">{{ question.snippet|safe }}</p>
         </div>
+        <form class="bookmark-form" action="{% url 'quesans:ques-bookmark' question.slug %}" method="POST" style="display: inline-block;" id="{{question.id}}">
+            {% csrf_token %}
+            <button type="submit" class="btn mt-1 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+            {% if question in booklst %}
+            <i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>
+            {% else %}
+            <i class="far fa-bookmark bookmark" style="font-size: 16px; margin-left: 5px;color:grey"></i>
+            {% endif %}
+            </button>
+        </form>
         {% if question.answered %}
         <span class="badge badge-danger">Closed</span>
         {% else %}
@@ -131,7 +141,40 @@
                     console.log('error', response)
                 }
             })
-          })
+          });
+          $('.bookmark-form').submit(function(e){
+            e.preventDefault()
+            const question_id = $(this).attr('id')
+            const url = $(this).attr('action')
+            //console.log(trimCount)
+            const bookmarkText = $(`.bookmark-btn${question_id}`).find("i").hasClass("bookmarked") ? "Bookmarked":"Bookmark"
+            //console.log(upvoteText)
+            //trimtext = $.trim(bookmarkText)
+            console.log(trimtext)
+            if(trimtext == 'Bookmarked') {
+               $(`.bookmark-btn${question_id}`).html('<<i class="far fa-bookmark bookmark" style="font-size: 16px; margin-left: 5px;color:grey"></i>')
+
+             }
+             else {
+                $(`.bookmark-btn${question_id}`).html('<i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>')
+                
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'question_id': question_id,
+                },
+                success: function(response) {
+                   console.log('success')
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+            })
+          });
         });
 </script>
 {% endblock %}
