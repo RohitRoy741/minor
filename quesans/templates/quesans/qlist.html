@@ -1,24 +1,181 @@
 {% extends 'quesans/base_layout.html' %}
+{% load mathfilters %}
 {% block content %}
+<!-- <h3 class="display-4">Question/question Forum</h3> -->
     {% for question in questions %}
-    <article class="media content-section" style="margin-top:50px">
-        <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+    <article class="media content-section">
+        <div class="ques-vote" style="display: flex; flex-direction: column;">
+            <img class="rounded-circle article-img" src="{{question.author.profile.image.url }}" width='50' height='50' >
+            <form action="{% url 'quesans:ques-voteup' %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ question.id }}">
+                {% csrf_token %}
+                <button type="submit" class="btn mt-1 upvote-btn{{ question.id }}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+                {% if question in uplst %}
+                <i class="fas fa-caret-up upvoted" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>
+                {% else %}
+                <i class="fas fa-caret-up upvote" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>
+                {% endif %}
+                </button>
+            </form>
+            <h5 class="vote-count{{question.id}}" style="margin-left: 18px;">{{question.qupvote.count|sub:question.qdownvote.count}}</h5>
+            <form class="downvote-form" action="{% url 'quesans:ques-votedown' %}" method="POST" style="display: inline-block;" id="{{question.id}}">
+                {% csrf_token %}
+                <button type="submit" class="btn mt-1 downvote-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+                {% if question in downlst %}
+                <i class="fas fa-caret-down downvoted" style="font-size: 28px; margin-left: 5px;color:black"></i>
+                {% else %}
+                <i class="fas fa-caret-down downvote" style="font-size: 28px; margin-left: 5px;color:grey"></i>
+                {% endif %}
+                </button>
+            </form>
+        </div>
         <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'profile-page' question.author.id %}">{{question.author}}</a>
             <small class="text-muted">{{question.created_on}}</small>
         </div>
-        <h2><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></h2>
-        <p class="article-content">{{ question.snippet|safe }}</p>
+        <p><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></p>
+        <p class="question-description">{{ question.snippet|safe }}</p>
+        </div>
+        <form class="bookmark-form" action="{% url 'quesans:ques-bookmark' question.slug %}" method="POST" style="display: inline-block;" id="{{question.id}}">
+            {% csrf_token %}
+            <button type="submit" class="btn mt-1 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+            {% if question in booklst %}
+            <i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>
+            {% else %}
+            <i class="far fa-bookmark bookmark" style="font-size: 16px; margin-left: 5px;color:grey"></i>
+            {% endif %}
+            </button>
+        </form>
+        <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
         {% if question.answered %}
         <span class="badge badge-danger">Closed</span>
         {% else %}
         <span class="badge badge-success">Open</span>
         {% endif %}
-        {% if question.author == user %}
-        <a href="{% url 'quesans:qupdate' question.pk %}" class='btn btn-info' role='button'>Edit</a>
-        {% endif %}
-        </div>
     </article>
     {% endfor %}
+{% endblock %}
+{% block script %}
+<script>
+       $(document).ready(function(){
+            $('.upvote-form').submit(function(e){
+                e.preventDefault()
+                //console.log('success')
+                const question_id = $(this).attr('id')
+                const url = $(this).attr('action')
+                let res;
+                const votes = $(`.vote-count${question_id}`).text()
+                const trimCount = parseInt(votes)
+                //console.log(trimCount)
+                const upvoteText = $(`.upvote-btn${question_id}`).find("i").hasClass("upvoted") ? "Upvoted":"Upvote"
+                const downvoteText = $(`.downvote-btn${question_id}`).find("i").hasClass("downvoted") ? "Downvoted":"Downvote"
+                //console.log(upvoteText)
+                trimup = $.trim(upvoteText)
+                trimdown = $.trim(downvoteText)
+                //console.log(trim)
+                if(trimup == 'Upvoted') {
+                   $(`.upvote-btn${question_id}`).html('<i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>')
+                   res = trimCount - 1
+                 } else if(trimdown == 'Downvoted'){
+                   $(`.downvote-btn${question_id}`).html('<i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>')
+                   $(`.upvote-btn${question_id}`).html('<i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>')
+                   res = trimCount + 2
+                 }
+                  else {
+                    $(`.upvote-btn${question_id}`).html('<i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>')
+                    res = trimCount + 1
+                }
+                 $(`.vote-count${question_id}`).text(res)
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'question_id': question_id,
+                    },
+                    success: function(response) {
+                       console.log('success')
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    }
+                })
+            })
+          $('.downvote-form').submit(function(e){
+            e.preventDefault()
+            const question_id = $(this).attr('id')
+            const url = $(this).attr('action')
+            let res
+            const votes = $(`.vote-count${question_id}`).text()
+            const trimCount = parseInt(votes)
+            //console.log(trimCount)
+            const upvoteText = $(`.upvote-btn${question_id}`).find("i").hasClass("upvoted") ? "Upvoted":"Upvote"
+            const downvoteText = $(`.downvote-btn${question_id}`).find("i").hasClass("downvoted") ? "Downvoted":"Downvote"
+            //console.log(upvoteText)
+            trimup = $.trim(upvoteText)
+            trimdown = $.trim(downvoteText)
+            //console.log(trim)
+            if(trimdown == 'Downvoted') {
+               $(`.downvote-btn${question_id}`).html('<i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>')
+               res = trimCount + 1
+             } else if(trimup == 'Upvoted'){
+               $(`.upvote-btn${question_id}`).html('<i class="fas fa-caret-up" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:grey"></i>')
+               $(`.downvote-btn${question_id}`).html('<i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>')
+               res = trimCount - 2
+             }
+             else {
+                $(`.downvote-btn${question_id}`).html('<i class="fas fa-caret-down" style="font-size: 28px; margin-left: 5px; margin-top: 10px;color:black"></i>')
+                res = trimCount - 1
+            }
+             $(`.vote-count${question_id}`).text(res)
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'question_id': question_id,
+                },
+                success: function(response) {
+                   console.log('success')
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+            })
+          });
+          $('.bookmark-form').submit(function(e){
+            e.preventDefault()
+            const question_id = $(this).attr('id')
+            const url = $(this).attr('action')
+            //console.log(trimCount)
+            const bookmarkText = $(`.bookmark-btn${question_id}`).find("i").hasClass("bookmarked") ? "Bookmarked":"Bookmark"
+            //console.log(upvoteText)
+            trimtext = $.trim(bookmarkText)
+            //console.log(trimtext)
+            if(trimtext == 'Bookmarked') {
+               $(`.bookmark-btn${question_id}`).html('<<i class="far fa-bookmark bookmark" style="font-size: 16px; margin-left: 5px;color:grey"></i>')
+
+             }
+             else {
+                $(`.bookmark-btn${question_id}`).html('<i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>')
+
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'question_id': question_id,
+                },
+                success: function(response) {
+                   console.log('success')
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+            })
+          });
+        });
+</script>
 {% endblock %}

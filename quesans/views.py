@@ -53,12 +53,17 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
         try:
             uplst = []
             downlst = []
+            booklst = []
+
             for question in Question.objects.all().filter(author=self.request.user):
                 if question.qupvote.filter(id=self.request.user.id).exists():
                     uplst.append(question)
                 if question.qdownvote.filter(id=self.request.user.id).exists():
                     downlst.append(question)
+                if question.bookmarked.filter(id=self.request.user.id).exists():
+                    booklst.append(question)
             context['uplst'] = uplst
+            context['downlst'] = downlst
             context['downlst'] = downlst
             return context
         except:
@@ -127,17 +132,20 @@ class QuestionAnswerView(DetailView):
 
     # get all answers corresponding to the question object
     def get_context_data(self, **kwargs):
-        object = self.get_object()
+        question = self.get_object()
         context = super().get_context_data(**kwargs)
         try:
             ulst = []
             dlst = []
-            context['answers'] = Answer.objects.all().filter(question=object)
-            for answer in Answer.objects.all().filter(question=object):
+            context['answers'] = Answer.objects.all().filter(question=question)
+            for answer in Answer.objects.all().filter(question=question):
                 if answer.upvote.filter(id=self.request.user.id).exists():
                     lst.append(answer)
                 if answer.downvote.filter(id=self.request.user.id).exists():
                     dlst.append(answer)
+            context['qupvotelst'] = question.qupvote.all()
+            context['qdvotelst'] = question.qdownvote.all()
+            context['bklst'] = question.bookmarked.all()        
             context['ulst'] = ulst
             context['dlst'] = dlst
             return context

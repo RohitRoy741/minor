@@ -149,15 +149,15 @@
             //console.log(trimCount)
             const bookmarkText = $(`.bookmark-btn${question_id}`).find("i").hasClass("bookmarked") ? "Bookmarked":"Bookmark"
             //console.log(upvoteText)
-            //trimtext = $.trim(bookmarkText)
-            console.log(trimtext)
+            trimtext = $.trim(bookmarkText)
+            //console.log(trimtext)
             if(trimtext == 'Bookmarked') {
                $(`.bookmark-btn${question_id}`).html('<<i class="far fa-bookmark bookmark" style="font-size: 16px; margin-left: 5px;color:grey"></i>')
 
              }
              else {
                 $(`.bookmark-btn${question_id}`).html('<i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>')
-                
+
             }
 
             $.ajax({
