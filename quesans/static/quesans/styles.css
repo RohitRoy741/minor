@@ -90,3 +90,35 @@ img{
   margin-top:0.5rem;
   margin-bottom:0.8rem;
 }
+
+.reply-thread{
+  width: 700px;
+  max-width: 100%;
+  margin: auto;
+  padding: 0 30px;
+  background-color: #fff;
+  border: 1px solid transparent;
+}
+
+.reply{
+  display:block;
+  position:relative;
+  margin-top:15px;
+  margin-left: 20px;
+}
+
+.reply-border-link {
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: -12px;
+    width: 12px;
+    height: calc(100%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    background-color: rgba(0, 0, 0, 0.1);
+    background-clip: padding-box;
+}
+.reply-border-link:hover {
+    background-color: aquamarine;
+}

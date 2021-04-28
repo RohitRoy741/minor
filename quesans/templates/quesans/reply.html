@@ -1,5 +1,7 @@
-<div class="border-0 border-start border-2 ps-2" id="{{reply.id}}">
-
+<div class="reply border-0 border-start border-2 ps-2" id="{{reply.id}}">
+  <a href="#{{reply.id}}" class="reply-border-link">
+      <span class="sr-only">Jump to reply {{reply.id}}</span>
+  </a>
         <div class="mt-3">
             <strong>{{reply.user.username}}</strong>
             {% if  reply.parent.user.username%} to <strong>{{reply.parent.user.username}}</strong>{% endif %}

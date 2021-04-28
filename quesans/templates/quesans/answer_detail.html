@@ -11,7 +11,7 @@
       {% endif %}
       <small class="text-muted">{{answer.date}}</small>
     </div>
-    <p class="article-content">{{answer.answer_text}}</p>
+    <p class="article-content">{{answer.answer_text|safe}}</p>
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
 
     <form action="{% url 'quesans:upvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
@@ -54,9 +54,11 @@
         {% if not answer.replies.all %}
             No replies yet
         {% else %}
-            {% for reply in answer.get_replies %}
-                {% include 'quesans/reply.html' with reply=reply %}
-            {% endfor %}
+        <div class="reply-thread">
+          {% for reply in answer.get_replies %}
+              {% include 'quesans/reply.html' with reply=reply %}
+          {% endfor %}
+        </div>
         {% endif %}
 {% endblock %}
 {% block script %}
