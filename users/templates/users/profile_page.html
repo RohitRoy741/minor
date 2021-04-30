@@ -18,12 +18,12 @@
         </form>
         {% else %}
           {% if requested %}
-          <form action="{% url 'follow-request' object.pk %}" method="POST" class="mt-1">
+          <form action="{% url 'follow' object.pk %}" method="POST" class="mt-1">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-sm " name="profile_id" value="{{ object.id }}">Requested</button>
           </form>
           {% else %}
-          <form action="{% url 'follow-request' object.pk %}" method="POST" class="mt-1">
+          <form action="{% url 'follow' object.pk %}" method="POST" class="mt-1">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ object.id }}">Follow</button>
           </form>
@@ -37,40 +37,6 @@
     </div>
     
   </div>
-  <!-- <div class="content-section" style="text-align: center;">
-    <img class="rounded-circle account-img" src="{{ object.image.url }}">
-    <div class="media" style="text-align: center;">
-        <div class="media-body">
-            <h2 class="account-heading">{{ object.user.username }}</h2>
-            <p class="text-secondary">{{ object.user.email }}</p> 
-        </div>
-    </div>
-    <div style="display: flex; flex-direction: row; justify-content: space-around;">
-      <div style="text-align: center; width: 25%;">
-        <p class="mt-0 mb-0">{{ profile.user.posts.count }}</p>
-        <p>Posts</p>
-      </div>
-      <div style="text-align: center; width: 25%;">
-        <p class="mt-0 mb-0">{{ profile.following.count }}</p>
-        <p>Followers</p>
-      </div>
-      <div style="text-align: center; width: 25%;">
-        <p class="mt-0 mb-0 ">{{ profile.user.following.count }}</p>
-       <p>Following</p>
-      </div>
-    </div>
-      {% if following %}
-        <form action="{% url 'follow' object.pk %}" method="POST" class="mt-1">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-success bt-sm" name="profile_id" value="{{ object.id }}">Following</button>
-        </form>
-      {% else %}
-        <form action="{% url 'follow' user.profile.pk %}" method="POST" class="mt-1">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary bt-sm" name="profile_id" value="{{ object.id }}">Follow</button>
-        </form>
-      {% endif %}
-  </div> -->
   <h2>Posts</h2>
   {% for post in posts %}
     {% ifequal profile.user post.author %}
