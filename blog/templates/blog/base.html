@@ -26,6 +26,8 @@
         background: rgb(44, 43, 43);
         color: #fff;
         margin-top: 5rem;
+        height: 100vh;
+        overflow: hidden;
       }
       .article-title {
         color: #eee1e1;
@@ -423,6 +425,15 @@
           padding-left: 0px;
       }
       }
+      .cent{
+        overflow: auto;
+        height: 87vh;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+      }
+      ::-webkit-scrollbar{
+        display: none;
+      }
     </style>
 </head>
 <body>
@@ -474,7 +485,7 @@
     </header>
     <main role="main" class="container">
         <div class="row">
-          <div class="col-md-3 web">
+          <div class="col-md-3 web cent">
             <div class="event">
               <div class="event-meta">
                 <h5>University Election</h5>
@@ -496,7 +507,7 @@
               <button class="btn btn-primary">Contact</button>
             </div>
           </div>
-          <div class="col-md-6 mobile-no-pad">
+          <div class="col-md-6 mobile-no-pad cent">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
@@ -526,7 +537,7 @@
             {% block content %}{% endblock %}
             {% block scripts %}{% endblock %}
           </div>
-          <div class="col-md-3 web" width="100%">
+          <div class="col-md-3 web cent" width="100%">
             {% if user.is_authenticated %}
             <div class="profile-card">
               <div class="profile-meta">
