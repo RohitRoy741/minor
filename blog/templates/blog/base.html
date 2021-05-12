@@ -426,6 +426,11 @@
       }
       }
       .cent{
+<<<<<<< HEAD
+        /* margin-top: 70px; */
+=======
+        margin-top: 70px;
+>>>>>>> master
         overflow: auto;
         height: 87vh;
         -webkit-overflow-scrolling: touch;
@@ -486,26 +491,22 @@
     <main role="main" class="container">
         <div class="row">
           <div class="col-md-3 web cent">
+            {% for event in events %}
             <div class="event">
               <div class="event-meta">
-                <h5>University Election</h5>
+                <h5>{{ event.title }}</h5>
                 <img src="/media/blog_images/event.jpg" alt="" height="150px" width="100%">
               </div>
-              <p>Time: All day</p>
-              <p>Venue: MS Teams</p>
-              <button class="btn btn-success">Read More</button>
-              <button class="btn btn-primary">Contact</button>
+              <p>Date: {{ event.date }}</p>
+              <p>Venue: {{ event.venue }}</p>
+              <button class="btn btn-secondary">Read More</button>
+              {% if event.id in interested %}
+                <button class="btn btn-success">Interested</button>
+              {% else %}
+                <button class="btn btn-primary">Interest</button>
+              {% endif %}
             </div>
-            <div class="event">
-              <div class="event-meta">
-                <h5>Club Event</h5>
-                <img src="/media/blog_images/CodingBlocks.png" alt="" height="150px" width="100%">
-              </div>
-              <p>25th April</p>
-              <p>Platform: Coding Blocks</p>
-              <button class="btn btn-success">Read More</button>
-              <button class="btn btn-primary">Contact</button>
-            </div>
+            {% endfor %}
           </div>
           <div class="col-md-6 mobile-no-pad cent">
             {% if messages %}
@@ -551,7 +552,6 @@
               <p> <i class="fas fa-home" style="color: #ffffff; margin-right: 5px;"></i>{{  user.profile.block }}, {{ user.profile.room }}</p>
               <p><i class="fa fa-graduation-cap" style="color: #ffffff; margin-right: 5px;" aria-hidden="true"></i>{{ user.profile.branch }}, {{ user.profile.programme }}</p>
             </div>
-            <button class="btn btn-success mt-1 ml-1"><a href="{% url 'find-friend' %}" style="text-decoration: none; color: azure;">Find Some Friends</a></button>
             {% for request in user.profile.follow_request.all %}
                   <div class="req-container req-id{{ request.pk }}">
                     <div class="req-meta">
@@ -578,6 +578,8 @@
               <button class="btn btn-success">Read More</button>
               <button class="btn btn-primary">Contact</button>
             </div>
+            <button class="btn btn-success mt-1 ml-2"><a href="{% url 'find-friend' %}" style="text-decoration: none; color: azure;">Find Friends</a></button>
+            <button class="btn btn-primary mt-1 ml-2"><a href="{% url 'create-event' %}" style="text-decoration: none; color: white;">Create Event</a></button>
           </div>
         </div>
       </main>

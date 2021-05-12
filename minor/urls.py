@@ -19,6 +19,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from users import views as user_views
+from event import views as event_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,7 +45,9 @@ urlpatterns = [
          user_views.findFriend, name='find-friend'),
     path('suggestions/', user_views.ProfileListView.as_view(
         template_name='users/suggestions.html'), name='suggestions'),
-    path('tinymce/', include('tinymce.urls')),    
+    path('tinymce/', include('tinymce.urls')),
+    path('create_event/', event_views.EventCreateView.as_view(
+        template_name='event/create.html'), name='create-event')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

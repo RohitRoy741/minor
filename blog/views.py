@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, Comment
 from users.models import Profile
 from django.contrib.auth.models import User
+from event.models import event
 
 
 def home(request):
@@ -26,6 +27,20 @@ class SearchView(ListView):
             result = None
         return result
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
+
 
 class PostListView(LoginRequiredMixin, ListView):
     model = Post
@@ -39,6 +54,12 @@ class PostListView(LoginRequiredMixin, ListView):
         for likes in self.request.user.post_likes.all():
             lst.append(likes.id)
         context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
         return context
 
 
@@ -52,6 +73,12 @@ class PostDetailView(DetailView):
         if post.likes.filter(id=self.request.user.id).exists():
             liked = True
         context["liked"] = liked
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
         return context
 
 
@@ -62,6 +89,20 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostCreateView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -78,6 +119,20 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostUpdateView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
+
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -89,6 +144,20 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostDeleteView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
+
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
@@ -98,6 +167,20 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CommentCreateView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
 
 
 def about(request):
@@ -122,6 +205,20 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(CommentUpdateView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
+
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
@@ -132,6 +229,20 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == comment.author:
             return True
         return False
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CommentDeleteView, self).get_context_data(**kwargs)
+        lst = []
+        for likes in self.request.user.post_likes.all():
+            lst.append(likes.id)
+        context['lst'] = lst
+        events = event.objects.all()
+        liked_events = []
+        for ev in self.request.user.interested.all():
+            liked_events.append(ev.id)
+        context['events'] = events
+        context['interested'] = liked_events
+        return context
 
 
 def LikeView(request, pk):
@@ -153,3 +264,10 @@ def LikeView(request, pk):
 
 def DevelopmentView(request):
     return render(request, 'blog/DevelopmentTeam.html')
+
+
+class EventListView(ListView):
+    model = event
+    template_name = 'blog/base.html'
+    context_object_name = 'events'
+    ordering = ['-date_posted']
