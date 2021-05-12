@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*', 'Salamander20.pythonanywhere.com',
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'blog.apps.BlogConfig',
+    'event.apps.EventConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
