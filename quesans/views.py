@@ -140,12 +140,12 @@ class QuestionAnswerView(DetailView):
             context['answers'] = Answer.objects.all().filter(question=question)
             for answer in Answer.objects.all().filter(question=question):
                 if answer.upvote.filter(id=self.request.user.id).exists():
-                    lst.append(answer)
+                    ulst.append(answer)
                 if answer.downvote.filter(id=self.request.user.id).exists():
                     dlst.append(answer)
             context['qupvotelst'] = question.qupvote.all()
             context['qdvotelst'] = question.qdownvote.all()
-            context['bklst'] = question.bookmarked.all()        
+            context['bklst'] = question.bookmarked.all()
             context['ulst'] = ulst
             context['dlst'] = dlst
             return context
