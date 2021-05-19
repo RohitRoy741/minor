@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from . import forms
 from .models import Question, Answer
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 
 class QuestionListView(ListView):
@@ -46,6 +47,12 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         questions = Question.objects.all().filter(author=self.request.user)
+        if self.kwargs["filter"] == 'answered':
+            questions.filter(answered=True)
+        elif self.kwargs["filter"] == 'pending':
+            questions.filter(answered=False)
+        elif self.kwargs["filter"] == 'bookmarked':
+            questions=Question.objects.all().filter(bookmarked__in=[self.request.user])
         return questions
 
     def get_context_data(self, **kwargs):
@@ -54,17 +61,27 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
             uplst = []
             downlst = []
             booklst = []
-
-            for question in Question.objects.all().filter(author=self.request.user):
+            answlst = []
+            pendlst = []
+            questions = Question.objects.all().filter(author=self.request.user)
+            if self.kwargs["filter"] == 'answered':
+                questions.filter(answered=True)
+            elif self.kwargs["filter"] == 'pending':
+                questions.filter(answered=False)
+            elif self.kwargs["filter"] == 'bookmarked':
+                questions=Question.objects.all().filter(bookmarked__in=[self.request.user])
+            for question in questions:
                 if question.qupvote.filter(id=self.request.user.id).exists():
                     uplst.append(question)
                 if question.qdownvote.filter(id=self.request.user.id).exists():
                     downlst.append(question)
                 if question.bookmarked.filter(id=self.request.user.id).exists():
                     booklst.append(question)
+                    print("question bookmarked")
             context['uplst'] = uplst
             context['downlst'] = downlst
             context['downlst'] = downlst
+            context['bklst'] = booklst
             return context
         except:
             return None
@@ -88,7 +105,7 @@ class SearchView(ListView):
 
 class PostQuestionView(LoginRequiredMixin, CreateView):
     model = Question
-    fields = ['title', 'desc']
+    fields = ['title', 'desc','image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -98,7 +115,7 @@ class PostQuestionView(LoginRequiredMixin, CreateView):
 
 class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Question
-    fields = ['title', 'desc','answered']
+    fields = ['title','desc','image','answered']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -145,7 +162,7 @@ class QuestionAnswerView(DetailView):
                     dlst.append(answer)
             context['qupvotelst'] = question.qupvote.all()
             context['qdvotelst'] = question.qdownvote.all()
-            context['bklst'] = question.bookmarked.all()        
+            context['bklst'] = question.bookmarked.all()
             context['ulst'] = ulst
             context['dlst'] = dlst
             return context
@@ -195,7 +212,7 @@ def reply_page(request):
 
 class AnswerPostView(LoginRequiredMixin, CreateView):
     model = Answer
-    fields = ['answer_text']
+    fields = ['answer_text','image']
 
     def get_context_data(self, **kwargs):
         kwargs['question'] = Question.objects.get(pk=self.kwargs.get('pk'))

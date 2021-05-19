@@ -3,13 +3,13 @@ from . import models
 from tinymce import TinyMCE
 
 class PostQues(forms.ModelForm):
-    desc = forms.CharField(widget=TinyMCE(mce_attrs={'width': 800}))
+    desc = forms.CharField(widget=TinyMCE(mce_attrs={'width': 500}))
     class Meta:
         model = models.Question
-        fields =['title','desc']
+        fields =['title','desc','image']
 
 class PostAns(forms.ModelForm):
-    answer_text = forms.CharField(widget=TinyMCE(mce_attrs={'width': 800}))
+    answer_text = forms.CharField(widget=TinyMCE(mce_attrs={'width':800}))
     class Meta:
         model = models.Answer
         fields = ['answer_text','is_anonymous']

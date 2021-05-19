@@ -7,6 +7,7 @@ from tinymce import HTMLField
 class Question(models.Model):
     title = models.CharField(max_length=100)
     desc = HTMLField('desc')
+    image = models.ImageField(null=True, blank=True, upload_to='question_images/')
     author=models.ForeignKey(User,on_delete=models.CASCADE,default=None)
     created_on = models.DateTimeField(auto_now=True)
     qupvote = models.ManyToManyField(User,related_name = 'q_upvote')
@@ -33,6 +34,7 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_text = HTMLField('content')
+    image = models.ImageField(null=True, blank=True, upload_to='answer_images/')
     date = models.DateTimeField(auto_now=True)
     is_anonymous = models.BooleanField(default=False)
     upvote = models.ManyToManyField(User,related_name = 'upvote')

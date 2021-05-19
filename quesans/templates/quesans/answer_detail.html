@@ -11,6 +11,9 @@
       {% endif %}
       <small class="text-muted">{{answer.date}}</small>
     </div>
+    {% if answer.image %}
+    <img src="{% answer.image.url %}" >
+    {% endif %}
     <p class="article-content">{{answer.answer_text|safe}}</p>
     Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
 
