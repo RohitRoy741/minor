@@ -14,7 +14,7 @@ h1,h2,h3,h4{
 
 .content-section {
   background: white;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1.5rem;
   border: 1px solid #dddddd;
   border-radius: 4px;
   margin-top:20px;
@@ -121,4 +121,8 @@ img{
 }
 .reply-border-link:hover {
     background-color: aquamarine;
+}
+
+.container-fluid{
+  margin-top:30px;
 }

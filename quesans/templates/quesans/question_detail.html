@@ -32,11 +32,14 @@
         <small class="text-muted">{{question.created_on}}</small>
     </div>
     <p><a class="article-title" href="{% url 'quesans:qthread' question.slug %}">{{ question.title }}</a></p>
-    <p class="question-description">{{ question.desc|safe }}</p>
+    {% if question.image %}
+    <img src="{{question.image.url}}" >
+    {% endif %}
+    <div class="question-description">{{ question.desc|safe }}</div>
     </div>
     <form class="bookmark-form" action="{% url 'quesans:ques-bookmark' question.slug %}" method="POST" style="display: inline-block;" id="{{question.id}}">
         {% csrf_token %}
-        <button type="submit" class="btn mt-1 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;">
+        <button type="submit" class="btn mt-1 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Bookmark question">
         {% if user in bklst %}
         <i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>
         {% else %}
@@ -45,7 +48,7 @@
         </button>
     </form>
     {% if question.author == user %}
-    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
+    <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Edit question"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
     {% endif %}
     {% if question.answered %}
     <span class="badge badge-danger">Closed</span>
@@ -61,6 +64,10 @@
 {% endif %}
 <br>
 <h2 class="display-4">Answers -</h2>
+<br>
+{% if not question.answered %}
+<a href="{% url 'quesans:postans' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-pen' style='font-size:24px;color:green' data-toggle="popover" data-trigger="hover" data-content="Add an answer"></i></a>
+{% endif %}
 {% for answer in answers %}
 <article class="media content-section" style="margin-top:20px, margin-bottom:50px">
   <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50' >
@@ -104,10 +111,6 @@
 </article>
 <a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Thread</a>
 {% endfor %}
-<br>
-{% if not question.answered %}
-<a href="{% url 'quesans:postans' question.pk %}" class='btn' role='button' style="background-color: transparent;"><i class='fas fa-pen' style='font-size:24px;color:green'></i></a>
-{% endif %}
 {% endblock %}
 {% block script %}
 <script>
