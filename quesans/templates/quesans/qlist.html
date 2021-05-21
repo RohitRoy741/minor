@@ -12,9 +12,6 @@
       <a class="dropdown-item" href="{% url 'quesans:qlist' filter='bookmarked' %}">Bookmarked</a>
     </div>
   </div>
-  <!-- <a href="{% url 'quesans:qlist' filter='answered' %}">answered</a>
-  <a href="{% url 'quesans:qlist' filter='pending' %}">pending</a>
-  <a href="{% url 'quesans:qlist' filter='bookmarked' %}">bookmarked</a> -->
   {% for question in questions %}
   <article class="media content-section">
       <div class="ques-vote" style="display: flex; flex-direction: column;">
