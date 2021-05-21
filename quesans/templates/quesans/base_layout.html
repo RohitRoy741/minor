@@ -149,7 +149,7 @@
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                   {% if user.is_authenticated %}
-                    <a class='nav-item nav-link' href="{% url 'quesans:qlist' filter='pending' %}" style="color: whitesmoke;" data-toggle="popover" data-trigger="hover" data-content="Your Question Lists"><i class='fas fa-list-ul' style='font-size:20px'></i></a>
+                    <a class='nav-item nav-link' href="{% url 'quesans:qlist' filter='all' %}" style="color: whitesmoke;" data-toggle="popover" data-trigger="hover" data-content="Your Question Lists"><i class='fas fa-list-ul' style='font-size:20px'></i></a>
                     <a class='nav-item nav-link' href="{% url 'quesans:qsearch' %}" style="color: whitesmoke;" data-toggle="popover" data-trigger="hover" data-content="Search for a question"><i class="fa fa-search" style="font-size:20px"></i></a>
                     <a class="nav-item nav-link" href="{% url 'profile' %}" style="color: whitesmoke;" data-toggle="popover" data-trigger="hover" data-content="User Profile"><i class="far fa-user-circle" style="color: #ffffff; font-size: 20px"></i></a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}" style="color: whitesmoke;" data-toggle="popover" data-trigger="hover" data-content="Sign Out"><i class="fas fa-sign-out-alt" style="color: #ffffff; font-size: 20px"></i></a>

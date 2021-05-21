@@ -46,11 +46,12 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
     ordering = ['answered','-created_on']
 
     def get_queryset(self):
-        questions = Question.objects.all().filter(author=self.request.user)
-        if self.kwargs["filter"] == 'answered':
-            questions.filter(answered=True)
+        if self.kwargs["filter"] == 'all':
+            questions = Question.objects.all().filter(author=self.request.user)
+        elif self.kwargs["filter"] == 'answered':
+            questions = Question.objects.all().filter(answered=True)
         elif self.kwargs["filter"] == 'pending':
-            questions.filter(answered=False)
+            questions = Question.objects.all().filter(answered=False)
         elif self.kwargs["filter"] == 'bookmarked':
             questions=Question.objects.all().filter(bookmarked__in=[self.request.user])
         return questions
@@ -63,13 +64,7 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
             booklst = []
             answlst = []
             pendlst = []
-            questions = Question.objects.all().filter(author=self.request.user)
-            if self.kwargs["filter"] == 'answered':
-                questions.filter(answered=True)
-            elif self.kwargs["filter"] == 'pending':
-                questions.filter(answered=False)
-            elif self.kwargs["filter"] == 'bookmarked':
-                questions=Question.objects.all().filter(bookmarked__in=[self.request.user])
+            questions = self.get_queryset()
             for question in questions:
                 if question.qupvote.filter(id=self.request.user.id).exists():
                     uplst.append(question)
@@ -77,7 +72,6 @@ class YourQuestionListView(LoginRequiredMixin, ListView):
                     downlst.append(question)
                 if question.bookmarked.filter(id=self.request.user.id).exists():
                     booklst.append(question)
-                    print("question bookmarked")
             context['uplst'] = uplst
             context['downlst'] = downlst
             context['downlst'] = downlst
@@ -155,7 +149,7 @@ class QuestionAnswerView(DetailView):
             ulst = []
             dlst = []
             context['answers'] = Answer.objects.all().filter(question=question)
-            for answer in Answer.objects.all().filter(question=question):
+            for answer in context['answers']:
                 if answer.upvote.filter(id=self.request.user.id).exists():
                     lst.append(answer)
                 if answer.downvote.filter(id=self.request.user.id).exists():
@@ -167,6 +161,7 @@ class QuestionAnswerView(DetailView):
             context['dlst'] = dlst
             return context
         except:
+            print("Error in get_context_data method")
             return None
 
 
@@ -242,8 +237,10 @@ def UpvoteView(request, slug):
     answer = get_object_or_404(Answer, id=request.POST.get('answer_id'))
     if answer.upvote.filter(id=request.user.id).exists():
         answer.upvote.remove(request.user)
-    else:
+    elif answer.downvote.filter(id=request.user.id).exists():
+        answer.downvote.remove(request.user)
         answer.upvote.add(request.user)
+    else: answer.upvote.add(request.user)
     messages.success(request, "Answer upvoted")
     return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
@@ -251,16 +248,13 @@ def UpvoteView(request, slug):
 def DownvoteView(request, slug):
     answer = get_object_or_404(Answer, id=request.POST.get('answer_id'))
     # check if user has already upvoted or not
-    upvotes = answer.upvote.all()
     # if so then remove upvote and notify user to downvote
-    if request.user in upvotes:
-        answer.upvote.remove(request.user)
-        #messages.success(request, "Upvote removed! Select downvote button to downvote")
-    elif answer.downvote.filter(id=request.user.id).exists():
+    if answer.downvote.filter(id=request.user.id).exists():
         answer.downvote.remove(request.user)
-    else:
+    elif answer.upvote.filter(id=request.user.id).exists():
+        answer.upvote.remove(request.user)
         answer.downvote.add(request.user)
-        #messages.success(request, "Answer downvoted")
+    else: answer.downvote.add(request.user)
     return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))
 
 def QuesVoteup(request):
@@ -294,6 +288,9 @@ def BookmarkView(request,slug):
 
 def QuestionAnswered(request, slug):
     question = get_object_or_404(Question, id=request.POST.get('question_id'))
-    question.answered = True
+    if question.answered == True:
+        question.answered = False
+    else:
+        question.answered = True
     question.save()
     return HttpResponseRedirect(reverse('quesans:qthread', args=[str(slug)]))

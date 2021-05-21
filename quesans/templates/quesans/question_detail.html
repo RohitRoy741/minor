@@ -70,19 +70,9 @@
 {% endif %}
 {% for answer in answers %}
 <article class="media content-section" style="margin-top:20px, margin-bottom:50px">
-  <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50' >
-  <div class="media-body">
-    <div class="article-metadata">
-      {% if answer.is_anonymous %}
-      <small class="text-muted">Anonymous</small>
-      {% else %}
-      <a class="mr-3" href="{% url 'profile-page' answer.user.id %}">{{answer.user.username}}</a>
-      {% endif %}
-      <small class="text-muted">{{answer.date}}</small>
-    </div>
-    <p class="article-content">{{answer.answer_text|safe}}</p>
-    Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
-
+  <div class="ans-vote" style="display: flex; flex-direction: column;">
+    <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50'>
+    <!-- Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p> -->
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
         {% csrf_token %}
         <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
@@ -93,7 +83,8 @@
         {% endif %}
         </button>
     </form>
-    Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p>
+    <h5 class="ans-vote-count{{answer.id}}" style="margin-left: 16px;">{{answer.upvote.count|sub:answer.downvote.count}}</h5>
+    <!-- Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p> -->
     <form class="downvote-form" action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;" id="{{answer.id}}">
         {% csrf_token %}
         <button type="submit" class="btn mt-1 downvote-btn{{answer.id}}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
@@ -104,8 +95,22 @@
         {% endif %}
         </button>
     </form>
+  </div>
+  <div class="media-body">
+    <div class="article-metadata">
+      {% if answer.is_anonymous %}
+      <small class="text-muted">Anonymous</small>
+      {% else %}
+      <a class="mr-3" href="{% url 'profile-page' answer.user.id %}">{{answer.user.username}}</a>
+      {% endif %}
+      <small class="text-muted">{{answer.date}}</small>
+    </div>
+    {% if answer.image %}
+    <img src="{{answer.image.url}}" >
+    {% endif %}
+    <div class="article-content">{{answer.answer_text|safe}}</div>
     {% if answer.user == user %}
-    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
+    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
     {% endif %}
   </div>
 </article>
@@ -121,21 +126,28 @@
                 const answer_id = $(this).attr('id')
                 const url = $(this).attr('action')
                 let res;
-                const upvotes = $(`.upvote-count${answer_id}`).text()
-                const trimCount = parseInt(upvotes)
+                const votes = $(`.ans-vote-count${answer_id}`).text()
+                const trimCount = parseInt(votes)
                 //console.log(trimCount)
                 const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
                 //console.log(upvoteText)
-                trim = $.trim(upvoteText)
-                //console.log(trim)
-                if(trim == 'Upvoted') {
+                const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+                //console.log(upvoteText)
+                trimdown = $.trim(downvoteText)
+                trimup = $.trim(upvoteText)
+                if(trimup == 'Upvoted') {
                    $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
                    res = trimCount - 1
-                 } else {
+                 } else if(trimdown == 'Downvoted'){
+                   $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
+                   $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
+                   res = trimCount + 2
+                 }
+                  else {
                     $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
                     res = trimCount + 1
                 }
-                 $(`.upvote-count${answer_id}`).text(res)
+                 $(`.ans-vote-count${answer_id}`).text(res)
                 $.ajax({
                     type: 'POST',
                     url: url,
@@ -156,21 +168,27 @@
             const answer_id = $(this).attr('id')
             const url = $(this).attr('action')
             let res
-            const downvotes = $(`.downvote-count${answer_id}`).text()
-            const trimCount = parseInt(downvotes)
+            const votes = $(`.ans-vote-count${answer_id}`).text()
+            const trimCount = parseInt(votes)
             //console.log(trimCount)
-            const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+            const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
             //console.log(upvoteText)
-            trim = $.trim(downvoteText)
-            //console.log(trim)
-            if(trim == 'Downvoted') {
+            trimup = $.trim(upvoteText)
+            const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+            trimdown = $.trim(downvoteText)
+            if(trimdown == 'Downvoted') {
                $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
-               res = trimCount - 1
-             } else {
+               res = trimCount + 1
+             } else if(trimup == 'Upvoted'){
+               $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
+               $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
+               res = trimCount - 2
+             }
+             else {
                 $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
-                res = trimCount + 1
+                res = trimCount - 1
             }
-             $(`.downvote-count${answer_id}`).text(res)
+             $(`.ans-vote-count${answer_id}`).text(res)
             $.ajax({
                 type: 'POST',
                 url: url,

@@ -1,7 +1,32 @@
 {% extends 'quesans/base_layout.html' %}
 {% block content %}
 <article class="media content-section" style="margin-top:20px, margin-bottom:50px">
-  <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50' >
+  <div class="ans-vote" style="display: flex; flex-direction: column;">
+    <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50'>
+    <!-- Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p> -->
+    <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
+        {% csrf_token %}
+        <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
+        {% if answer in ulst %}
+        <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
+        {% else %}
+        <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
+        {% endif %}
+        </button>
+    </form>
+    <h5 class="ans-vote-count{{answer.id}}" style="margin-left: 16px;">{{answer.upvote.count|sub:answer.downvote.count}}</h5>
+    <!-- Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p> -->
+    <form class="downvote-form" action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;" id="{{answer.id}}">
+        {% csrf_token %}
+        <button type="submit" class="btn mt-1 downvote-btn{{answer.id}}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
+        {% if answer in dlst %}
+        <i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>
+        {% else %}
+        <i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>
+        {% endif %}
+        </button>
+    </form>
+  </div>
   <div class="media-body">
     <div class="article-metadata">
       {% if answer.is_anonymous %}
@@ -12,34 +37,11 @@
       <small class="text-muted">{{answer.date}}</small>
     </div>
     {% if answer.image %}
-    <img src="{% answer.image.url %}" >
+    <img src="{{answer.image.url}}" >
     {% endif %}
-    <p class="article-content">{{answer.answer_text|safe}}</p>
-    Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p>
-
-    <form action="{% url 'quesans:upvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
-        {% csrf_token %}
-        <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
-        {% if answer in ulst %}
-        <i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>
-        {% else %}
-        <i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>
-        {% endif %}
-        </button>
-    </form>
-    Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p>
-    <form class="downvote-form" action="{% url 'quesans:downvote-ans' answer.question.slug %}" method="POST" style="display: inline-block;" id="{{answer.id}}">
-        {% csrf_token %}
-        <button type="submit" class="btn mt-1 downvote-btn{{answer.id}}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
-        {% if answer in dlst %}
-        <i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>
-        {% else %}
-        <i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>
-        {% endif %}
-        </button>
-    </form>
+    <div class="article-content">{{answer.answer_text|safe}}</div>
     {% if answer.user == user %}
-    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn btn-info" role="button">Delete</a>
+    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
     {% endif %}
   </div>
 </article>
@@ -67,77 +69,90 @@
 {% block script %}
 <script>
        $(document).ready(function(){
-            $('.upvote-form').submit(function(e){
-                e.preventDefault()
-                //console.log('success')
-                const answer_id = $(this).attr('id')
-                const url = $(this).attr('action')
-                let res;
-                const upvotes = $(`.upvote-count${answer_id}`).text()
-                const trimCount = parseInt(upvotes)
-                //console.log(trimCount)
-                const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
-                //console.log(upvoteText)
-                trim = $.trim(upvoteText)
-                //console.log(trim)
-                if(trim == 'Upvoted') {
-                   $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
-                   res = trimCount - 1
-                 } else {
-                    $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
-                    res = trimCount + 1
-                }
-                 $(`.upvote-count${answer_id}`).text(res)
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-                        'answer_id': answer_id,
-                    },
-                    success: function(response) {
-                       console.log('success')
-                    },
-                    error: function(response) {
-                        console.log('error', response)
-                    }
-                })
-            })
-          $('.downvote-form').submit(function(e){
-            e.preventDefault()
-            const answer_id = $(this).attr('id')
-            const url = $(this).attr('action')
-            let res
-            const downvotes = $(`.downvote-count${answer_id}`).text()
-            const trimCount = parseInt(downvotes)
-            //console.log(trimCount)
-            const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
-            //console.log(upvoteText)
-            trim = $.trim(downvoteText)
-            //console.log(trim)
-            if(trim == 'Downvoted') {
-               $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
-               res = trimCount - 1
-             } else {
-                $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
-                res = trimCount + 1
-            }
-             $(`.downvote-count${answer_id}`).text(res)
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: {
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-                    'answer_id': answer_id,
-                },
-                success: function(response) {
-                   console.log('success')
-                },
-                error: function(response) {
-                    console.log('error', response)
-                }
-            })
+         $('.upvote-form').submit(function(e){
+             e.preventDefault()
+             //console.log('success')
+             const answer_id = $(this).attr('id')
+             const url = $(this).attr('action')
+             let res;
+             const votes = $(`.ans-vote-count${answer_id}`).text()
+             const trimCount = parseInt(votes)
+             //console.log(trimCount)
+             const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
+             //console.log(upvoteText)
+             const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+             //console.log(upvoteText)
+             trimdown = $.trim(downvoteText)
+             trimup = $.trim(upvoteText)
+             if(trimup == 'Upvoted') {
+                $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
+                res = trimCount - 1
+              } else if(trimdown == 'Downvoted'){
+                $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
+                $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
+                res = trimCount + 2
+              }
+               else {
+                 $(`.upvote-btn${answer_id}`).html("<i class='fas fa-thumbs-up' style='font-size:24px;color:green'></i>")
+                 res = trimCount + 1
+             }
+              $(`.ans-vote-count${answer_id}`).text(res)
+             $.ajax({
+                 type: 'POST',
+                 url: url,
+                 data: {
+                     'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                     'answer_id': answer_id,
+                 },
+                 success: function(response) {
+                    console.log('success')
+                 },
+                 error: function(response) {
+                     console.log('error', response)
+                 }
+             })
+         });
+       $('.downvote-form').submit(function(e){
+         e.preventDefault()
+         const answer_id = $(this).attr('id')
+         const url = $(this).attr('action')
+         let res
+         const votes = $(`.ans-vote-count${answer_id}`).text()
+         const trimCount = parseInt(votes)
+         //console.log(trimCount)
+         const upvoteText = $(`.upvote-btn${answer_id}`).find("i").hasClass("fas") ? "Upvoted":"Upvote"
+         //console.log(upvoteText)
+         trimup = $.trim(upvoteText)
+         const downvoteText = $(`.downvote-btn${answer_id}`).find("i").hasClass("fas") ? "Downvoted":"Downvote"
+         trimdown = $.trim(downvoteText)
+         if(trimdown == 'Downvoted') {
+            $(`.downvote-btn${answer_id}`).html("<i class='far fa-thumbs-down' style='font-size:24px;color:red'></i>")
+            res = trimCount + 1
+          } else if(trimup == 'Upvoted'){
+            $(`.upvote-btn${answer_id}`).html("<i class='far fa-thumbs-up' style='font-size:24px;color:green'></i>")
+            $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
+            res = trimCount - 2
+          }
+          else {
+             $(`.downvote-btn${answer_id}`).html("<i class='fas fa-thumbs-down' style='font-size:24px;color:red'></i>")
+             res = trimCount - 1
+         }
+          $(`.ans-vote-count${answer_id}`).text(res)
+         $.ajax({
+             type: 'POST',
+             url: url,
+             data: {
+                 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                 'answer_id': answer_id,
+             },
+             success: function(response) {
+                console.log('success')
+             },
+             error: function(response) {
+                 console.log('error', response)
+             }
           })
+         });
         });
 </script>
 {% endblock %}
