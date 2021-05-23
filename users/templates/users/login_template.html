@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, inital-scale=1.0'>
+    <meta name='viewport' content='width=device-width, inital-scale=1'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static '/quesans/styles.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -16,8 +16,8 @@
 	max-width: 100%;
 	height: auto;
 	}
-	canvas { 
-	width: 100%;
+	canvas {
+	max-width: 100%;
 	height: auto;
 }
 </style>
@@ -26,7 +26,7 @@
 	<h5 class="font-weight-bold text-center">Make sure your face is clearly visible</h5>
 	<div class="row">
         {% block content %}{% endblock %}
-	</div>	
+	</div>
       </main>
   </body>
 </html>
