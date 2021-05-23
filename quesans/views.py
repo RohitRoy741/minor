@@ -169,6 +169,8 @@ def AnswerDetail(request, pk):
     answer = get_object_or_404(Answer, id=pk)
     # List of active comments for this post
     replies = answer.replies.filter(active=True)
+    upvotes = answer.upvote.all()
+    downvotes = answer.downvote.all()
     new_reply = None
     if request.method == 'POST':
         # A comment was posted
@@ -183,10 +185,9 @@ def AnswerDetail(request, pk):
             new_reply.save()
             # redirect to same page and focus on that comment
             return HttpResponseRedirect(reverse('quesans:ans-detail', args=[str(pk)])+'#'+str(new_reply.id))
-            # answer.get_absolute_url()+'#'+str(new_reply.id)
     else:
         reply_form = forms.PostReply()
-    return render(request, 'quesans/answer_detail.html', {'answer': answer, 'replies': replies, 'reply_form': reply_form})
+    return render(request, 'quesans/answer_detail.html', {'answer': answer, 'replies': replies, 'reply_form': reply_form,'upvotes':upvotes,'downvotes':downvotes})
 
 
 def reply_page(request):

@@ -72,7 +72,7 @@
 <article class="media content-section" style="margin-top:20px, margin-bottom:50px">
   <div class="ans-vote" style="display: flex; flex-direction: column;">
     <img class="rounded-circle article-img" src="{{answer.user.profile.image.url }}" width='50' height='50'>
-    <!-- Upvotes: <p class="upvote-count{{ answer.id }}">{{answer.upvote.count}}</p> -->
+    <br>
     <form action="{% url 'quesans:upvote-ans' question.slug %}" method="POST" style="display: inline-block;" class="upvote-form" id="{{ answer.id }}">
         {% csrf_token %}
         <button type="submit" class="btn mt-1 upvote-btn{{ answer.id }}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
@@ -84,7 +84,6 @@
         </button>
     </form>
     <h5 class="ans-vote-count{{answer.id}}" style="margin-left: 16px;">{{answer.upvote.count|sub:answer.downvote.count}}</h5>
-    <!-- Downvotes: <p class="downvote-count{{answer.id}}">{{answer.downvote.count}}</p> -->
     <form class="downvote-form" action="{% url 'quesans:downvote-ans' question.slug %}" method="POST" style="display: inline-block;" id="{{answer.id}}">
         {% csrf_token %}
         <button type="submit" class="btn mt-1 downvote-btn{{answer.id}}" name="answer_id" value="{{ answer.id }}" style="background-color: transparent;">
@@ -113,8 +112,9 @@
     <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
     {% endif %}
   </div>
+  <a href="{% url 'quesans:ans-detail' answer.pk %}"><i class='fas fa-scroll' style='font-size:20px;color:black' data-toggle="popover" data-trigger="hover" data-content="Explore Answer Thread"></i></a>
 </article>
-<a href="{% url 'quesans:ans-detail' answer.pk %}">Explore Answer Thread</a>
+<br>
 {% endfor %}
 {% endblock %}
 {% block script %}
