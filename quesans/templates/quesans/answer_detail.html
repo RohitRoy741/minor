@@ -40,10 +40,11 @@
     <img src="{{answer.image.url}}" >
     {% endif %}
     <div class="article-content">{{answer.answer_text|safe}}</div>
-    {% if answer.user == user %}
-    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
-    {% endif %}
   </div>
+  {% if answer.user == user %}
+  <a href="{% url 'quesans:ansupdate' answer.pk %}" class='btn' role='button' style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Edit answer"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
+  <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete answer"><i class='fas fa-trash-alt' style='font-size:16px;color:red'></i></a>
+  {% endif %}
 </article>
 <br>
 <h3>Add Reply to original thread</h3>

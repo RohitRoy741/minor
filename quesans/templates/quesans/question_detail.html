@@ -35,11 +35,11 @@
     {% if question.image %}
     <img src="{{question.image.url}}" >
     {% endif %}
-    <div class="question-description">{{ question.desc|safe }}</div>
+    <div class="article-content">{{ question.desc|safe }}</div>
     </div>
     <form class="bookmark-form" action="{% url 'quesans:ques-bookmark' question.slug %}" method="POST" style="display: inline-block;" id="{{question.id}}">
         {% csrf_token %}
-        <button type="submit" class="btn mt-1 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Bookmark question">
+        <button type="submit" class="btn mt-2 bookmark-btn{{question.id}}" name="question_id" value="{{ question.id }}" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Bookmark question">
         {% if user in bklst %}
         <i class="fas fa-bookmark bookmarked" style="font-size: 16px; margin-left: 5px;color:black"></i>
         {% else %}
@@ -49,6 +49,7 @@
     </form>
     {% if question.author == user %}
     <a href="{% url 'quesans:qupdate' question.pk %}" class='btn' role='button' style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Edit question"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
+    <a href="{% url 'quesans:delquestion' question.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:16px;color:red'></i></a>
     {% endif %}
     {% if question.answered %}
     <span class="badge badge-danger">Closed</span>
@@ -108,11 +109,12 @@
     <img src="{{answer.image.url}}" >
     {% endif %}
     <div class="article-content">{{answer.answer_text|safe}}</div>
-    {% if answer.user == user %}
-    <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete question"><i class='fas fa-trash-alt' style='font-size:24px;color:red'></i></a>
-    {% endif %}
   </div>
-  <a href="{% url 'quesans:ans-detail' answer.pk %}"><i class='fas fa-scroll' style='font-size:20px;color:black' data-toggle="popover" data-trigger="hover" data-content="Explore Answer Thread"></i></a>
+  <a href="{% url 'quesans:ans-detail' answer.pk %}" class="btn" role='button' style="background-color: transparent;"><i class='fas fa-scroll' style='font-size:16px;color:black' data-toggle="popover" data-trigger="hover" data-content="Explore Answer Thread"></i></a>
+  {% if answer.user == user %}
+  <a href="{% url 'quesans:ansupdate' answer.pk %}" class='btn' role='button' style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Edit answer"><i class='fas fa-edit' style='font-size:16px;color:green'></i></a>
+  <a href="{% url 'quesans:delanswer' answer.pk %}" class="btn" role="button" style="background-color: transparent;" data-toggle="popover" data-trigger="hover" data-content="Delete answer"><i class='fas fa-trash-alt' style='font-size:16px;color:red'></i></a>
+  {% endif %}
 </article>
 <br>
 {% endfor %}

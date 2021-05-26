@@ -3,13 +3,11 @@ from .models import Question, Answer, Reply
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from . import forms
 from .models import Question, Answer
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
 
 
 class QuestionListView(ListView):
@@ -132,6 +130,17 @@ class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_absolute_url(self):
         return reverse('quesans:qthread', args=[str(self.question.slug)])
 
+class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Question
+    success_url = '/Query'
+
+    def test_func(self):
+        question = self.get_object()
+        if self.request.user == question.author:
+            return True
+        else:
+            messages.error(self.request, "Cannot delete question!")
+            return False
 
 class QuestionAnswerView(DetailView):
     model = Question
@@ -189,6 +198,30 @@ def AnswerDetail(request, pk):
         reply_form = forms.PostReply()
     return render(request, 'quesans/answer_detail.html', {'answer': answer, 'replies': replies, 'reply_form': reply_form,'upvotes':upvotes,'downvotes':downvotes})
 
+class AnswerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Answer
+    fields = ['answer_text','image','is_anonymous']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        messages.success(self.request, "Answer updated successfully!")
+        return super().form_valid(form)
+
+    def test_func(self):
+        answer = self.get_object()
+        if self.request.user == answer.user:
+            return True
+        else:
+            messages.error(self.request, "Error editing answer!")
+            return False
+
+    def get_login_url(self):
+        if self.request.user.is_authenticated:
+            return '/quesans/list/'
+        return super().get_login_url()
+
+    def get_absolute_url(self):
+        return reverse('quesans:ans-detail', args=[str(self.answer.pk)])
 
 def reply_page(request):
     if request.method == "POST":
@@ -223,7 +256,7 @@ class AnswerPostView(LoginRequiredMixin, CreateView):
 
 class AnswerDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Answer
-    success_url = '/quesans'
+    success_url = '/Query'
 
     def test_func(self):
         answer = self.get_object()
@@ -266,7 +299,6 @@ def QuesVoteup(request):
         question.qdownvote.remove(request.user)
         question.qupvote.add(request.user)
     else: question.qupvote.add(request.user)
-    #return JsonResponse(data, safe=False)
     return HttpResponseRedirect(reverse('quesans:qlist'))
 
 def QuesVotedown(request):
@@ -277,7 +309,6 @@ def QuesVotedown(request):
         question.qupvote.remove(request.user)
         question.qdownvote.add(request.user)
     else: question.qdownvote.add(request.user)
-    #return JsonResponse(data, safe=False)
     return HttpResponseRedirect(reverse("quesans:qlist"))
 
 def BookmarkView(request,slug):
