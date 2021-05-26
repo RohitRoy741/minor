@@ -8,7 +8,6 @@ urlpatterns = [
     path('',views.QuestionListView.as_view(),name='clist'),
     path('postanswer/<int:pk>/new/',views.AnswerPostView.as_view(),name='postans'),
     path('post/new/',views.PostQuestionView.as_view(),name='postq'),
-    # path('post/new/upload/image/',views.upload_image,name='upload-img'),
     path('searchquestion/',views.SearchView.as_view(),name='qsearch'),
     path('voteup/',views.QuesVoteup,name='ques-voteup'),
     path('votedown/',views.QuesVotedown,name='ques-votedown'),
@@ -20,5 +19,7 @@ urlpatterns = [
     path('upvote/<slug:slug>/',views.UpvoteView,name='upvote-ans'),
     path('downvote/<slug:slug>/',views.DownvoteView,name='downvote-ans'),
     path('post/<int:pk>/update/',views.QuestionUpdateView.as_view(),name='qupdate'),
+    path('post/<int:pk>/delete/',views.QuestionDeleteView.as_view(),name='delquestion'),
     path('postanswer/<int:pk>/delete/',views.AnswerDeleteView.as_view(),name='delanswer'),
+    path('postanswer/<int:pk>/update/',views.AnswerUpdateView.as_view(),name='ansupdate'),
 ]
