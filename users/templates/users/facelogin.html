@@ -21,6 +21,9 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       video: true
     }).then(function(stream) {
       video.srcObject = stream;
+      stream.getTracks().forEach(function(track) {
+        console.log(track.getSettings());
+      })
       video.play();
     });
   }
